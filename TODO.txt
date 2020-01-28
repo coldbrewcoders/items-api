@@ -1,0 +1,4 @@
+* Add JWT auth scheme
+* Create real login endpoint
+* Create GET/POST/PUT/DELETE user endpoints
+* Create GET/POST/PUT/DELETE items endpoints

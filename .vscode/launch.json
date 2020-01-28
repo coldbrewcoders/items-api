@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "User Service",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/services/user-service/main.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Session Service",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/services/session-service/main.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Items Service",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/services/items-service/main.js"
+    }
+  ]
+}
