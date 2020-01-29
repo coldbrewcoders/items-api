@@ -8,7 +8,7 @@ const logger = require("morgan");
 require("./config/postgres_config");
 
 // Start gRPC server
-//require("./config/grpc_config");
+require("./config/grpc_config");
 
 
 // Import REST API routes
