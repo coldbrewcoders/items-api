@@ -14,7 +14,7 @@ require("./config/grpc_config");
 // Import REST API routes
 const signupApi = require("./routes/signup");
 const loginApi = require("./routes/login");
-//const logoutApi = require("./routes/logout");
+const logoutApi = require("./routes/logout");
 //const userAPI = require("./routes/user");
 
 
@@ -30,7 +30,7 @@ app.use(bodyParser.json());
 // Configure REST API routes
 app.use("/api/signup", signupApi);
 app.use("/api/login", loginApi);
-//app.use("/api/logout", logoutApi);
+app.use("/api/logout", logoutApi);
 //app.use("/api/user", useAPI);
 
 // Return 404 response if no route matched

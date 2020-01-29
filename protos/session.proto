@@ -11,13 +11,15 @@ service SessionService {
 
 
 message ValidateSessionRequest {
-  int32 userId = 1;
-  string sessionToken = 2;
+  string sessionToken = 1;
 }
 
 message ValidateSessionResponse {
-  bool hasValidSession = 1;
-  string userRole = 2;
+  int32 userId = 1;
+  string email = 2;
+  string firstName = 3;
+  string lastName = 4;
+  string role = 5;
 }
 
 message CreateSessionRequest {
