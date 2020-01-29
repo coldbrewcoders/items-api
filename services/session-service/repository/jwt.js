@@ -9,19 +9,17 @@ const publicKey = fs.readFileSync(path.join(__dirname, "../keys/public.key"), "u
 
 /*** Private module methods ***/
 
-const _getSignOptions = (userId, email) => ({
+const _getSignOptions = () => ({
   issuer: "session-service",
-  subject: email,
-  audience: userId,
-  expiresIn: "30m",
+  subject: "items-api",
+  audience: "user",
   algorithm: "RS256"
 });
 
-const _getVerifyOptions = (userId, email) => ({
+const _getVerifyOptions = () => ({
   issuer: "session-service",
-  subject: email,
-  audience: userId,
-  expiresIn: "30m",
+  subject: "items-api",
+  audience: "user",
   algorithm: ["RS256"]
 });
 
@@ -41,7 +39,7 @@ const signJwt = (userId, email, firstName, lastName, role) => {
 
   try {
     // Create signed JWT for user session token
-    return jwt.sign(payload, privateKey, _getSignOptions(userId, email));
+    return jwt.sign(payload, privateKey, _getSignOptions());
   }
   catch (error) {
     console.error(`JWT SIGNATURE ERROR: ${error}`);
@@ -49,10 +47,10 @@ const signJwt = (userId, email, firstName, lastName, role) => {
   }
 }
 
-const verifyJwt = (token, userId, email) => {
+const verifyJwt = (token) => {
   try {
     // Return verified token payload
-    return jwt.verify(token, publicKey, _getVerifyOptions(userId, email));
+    return jwt.verify(token, publicKey, _getVerifyOptions());
   }
   catch (error) {
     console.error(`JWT VERIFICATION ERROR: ${error}`);

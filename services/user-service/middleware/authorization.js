@@ -1,53 +1,50 @@
-const { authServiceGrpcClient } = require("../config/grpc_config");
+// gRPC
+const { sessionServiceGrpcClient } = require("../config/grpc_config");
 
 
-const isAuthenticated = (req, res, next) => {
+const verifySessionToken = (req, res, next) => {
+  try {
 
-  authServiceGrpcClient.checkIsUserAuthed({ sessionToken: "sessionToken" }, (error, { isAuthenticated }) => {
+    // Get session token from Authorization header
+    const authHeader = req.header("Authorization");
 
-    if (error) {
-      console.error(error);
-      res.status(500).end();
+    if (!authHeader) {
+      // Unauthorized if session token is missing from request
+      res.status(401).end();
+      return
     }
 
-    if (isAuthenticated) {
-      return next();
-    }
-    else {
-      res.status(401);
-    }
+    const sessionToken = authHeader.replace("Bearer ", "");
 
-  });
-
-}
-
-const isAuthenticatedAdmin = (req, res, next) => {
-
-  authServiceGrpcClient.checkIsUserAuthed({ sessionToken: "sessionToken" }, (error, { isAuthenticated, userRole }) => {
-
-    if (error) {
-      console.error(error);
-      res.status(500).end();
+    if (!sessionToken) {
+      // Unauthorized if session token is missing from request
+      res.status(401).end();
+      return
     }
 
-    if (isAuthenticated) {
+    // gRPC call to session service to validate session
+    sessionServiceGrpcClient.validateSession({ sessionToken }, (error, sessionValues) => {
 
-      if (userRole === "Admin") {
+      if (error) {
+        console.error(error);
+        res.status(401).end();
+      }
+      else {
+        // Add session values to req object
+        req.sessionValues = sessionValues;
         next();
       }
 
-      res.status(403).end();
-    }
-    else {
-      res.status(401).end();
-    }
+    });
 
-  });
-
+  }
+  catch (error) {
+    console.error(error);
+    res.status(500).end();
+  }
 }
 
 
 module.exports = {
-  isAuthenticated,
-  isAuthenticatedAdmin
+  verifySessionToken
 };

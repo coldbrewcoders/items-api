@@ -24,8 +24,8 @@ const getSessionToken = async (userId) => {
 
 const setSessionToken = async (userId, token) => {
   try {
-    // Add key and session token key/value pair to Redis
-    return await redisClient.setAsync(_getSessionKey(userId), token);
+    // Add key and session token key/value pair to Redis (expires in 30 minutes)
+    return await redisClient.setAsync(_getSessionKey(userId), token, "EX", 1800);
   }
   catch (error) {
     console.error(`Session Service: setSessionToken ERROR -> ${error}`);

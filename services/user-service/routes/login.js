@@ -10,7 +10,7 @@ const { getUserByEmail } = require("../repository/queries");
 const { verifyPassword } = require("../repository/crypt");
 
 // gRPC
-const { sessionServiceGrpcClient: { createSession } } = require("../config/grpc_config");
+const { sessionServiceGrpcClient } = require("../config/grpc_config");
 
 
 router.post("/", [
@@ -54,13 +54,22 @@ router.post("/", [
     else {
 
       // Create session for authenticated user with gRPC call to session service
-      createSession({ userId, email, firstName, lastName, role }, (error, { sessionToken }) => {
+      sessionServiceGrpcClient.createSession({ userId, email, firstName, lastName, role }, (error, { sessionToken }) => {
 
         if (error) {
+          console.error(error);
           res.sendStatus(500);
         }
         else {
-          res.status(200).json({ sessionToken });
+          
+          res.status(200).json({ 
+            sessionToken,
+            userId,
+            email,
+            firstName,
+            lastName,
+            role
+          });
         }
 
       });
