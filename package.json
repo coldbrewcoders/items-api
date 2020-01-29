@@ -2,9 +2,9 @@
   "name": "grpc-node",
   "version": "1.0.0",
   "scripts": {
-    "start-session-service": "node ./services/session-service/main.js",
-    "start-items-service": "node ./services/items-service/main.js",
-    "start-user-service": "node ./services/user-service/main.js"
+    "start-session-service": "nodemon ./services/session-service/main.js",
+    "start-items-service": "nodemon ./services/items-service/main.js",
+    "start-user-service": "nodemon ./services/user-service/main.js"
   },
   "dependencies": {
     "@grpc/proto-loader": "0.5.3",
@@ -21,6 +21,9 @@
     "morgan": "1.9.1",
     "pg": "7.17.1",
     "redis": "2.8.0"
+  },
+  "devDependencies": {
+    "nodemon": "2.0.2"
   },
   "license": "ISC"
 }
