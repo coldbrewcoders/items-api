@@ -15,7 +15,7 @@ require("./config/grpc_config");
 const signupApi = require("./routes/signup");
 const loginApi = require("./routes/login");
 const logoutApi = require("./routes/logout");
-//const userAPI = require("./routes/user");
+const userAPI = require("./routes/user");
 
 
 // Configure express server
@@ -31,7 +31,7 @@ app.use(bodyParser.json());
 app.use("/api/signup", signupApi);
 app.use("/api/login", loginApi);
 app.use("/api/logout", logoutApi);
-//app.use("/api/user", useAPI);
+app.use("/api/user", userAPI);
 
 // Return 404 response if no route matched
 app.use("*", (req, res) => {

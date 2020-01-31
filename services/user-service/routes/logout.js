@@ -2,13 +2,13 @@ const express = require("express");
 const router = express.Router();
 
 // Middleware
-const { verifySessionToken } = require("../middleware/authorization");
+const { isAuthenticated } = require("../middleware/authorization");
 
 // gRPC
 const { sessionServiceGrpcClient } = require("../config/grpc_config");
 
 
-router.get("/", verifySessionToken, (req, res) => {
+router.get("/", isAuthenticated, (req, res) => {
   
   // Get user id from session values
   const { userId } = req.sessionValues;
@@ -19,14 +19,12 @@ router.get("/", verifySessionToken, (req, res) => {
     if (error) {
       console.error(error);
       res.status(500).end();
-    }
-    else {
-      // Session removed, user is logged out
-      res.status(200).end();
+      return;
     }
 
+    // Session removed, user is logged out
+    res.status(200).end();
   });
-
 });
 
 

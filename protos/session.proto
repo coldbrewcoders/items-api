@@ -5,7 +5,8 @@ package session;
 
 service SessionService {
   rpc ValidateSession (ValidateSessionRequest) returns (ValidateSessionResponse) {}
-  rpc CreateSession (CreateSessionRequest) returns (CreateSessionResponse) {} 
+  rpc CreateSession (CreateSessionRequest) returns (CreateSessionResponse) {}
+  rpc ReplaceSession (CreateSessionRequest) returns (CreateSessionResponse) {}
   rpc RemoveSession (RemoveSessionRequest) returns (RemoveSessionResponse) {}
 }
 

@@ -30,6 +30,7 @@ router.post("/", [
 
 ], validationCheck, async (req, res) => {
 
+  // Get validated request data
   const { email, password, firstName, lastName, role } = req.matchedData;
 
   // Generate safe password for storage
@@ -38,31 +39,27 @@ router.post("/", [
   // Send 500 if error occurred creating safe password hash
   if (!safePasswordHash) {
     res.sendStatus(500).end();
+    return;
   }
 
   // Add new user to the DB
   const result = await addUser(email, safePasswordHash, firstName, lastName, role);
 
-  // Send 500 if error occurred creating new user
   if (result.name === "error") {
 
     // Check if email unique constraint was violated
     if (result.constraint === "users_email_key") {
-
       res.status(409).json({
         message: "A user with this email address already exists."
       });
-
+      return;
     }
-    else {
-      res.sendStatus(500).end();
-    }
+    
+    res.sendStatus(500).end();
+    return;
+  }
 
-  }
-  else {
-    // Account created successfully
-    res.sendStatus(200).end();
-  }
+  res.sendStatus(200).end();
 });
 
 
