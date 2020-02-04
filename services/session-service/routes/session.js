@@ -8,7 +8,7 @@ router.get("/is-valid-session", (req, res) => {
 });
 
 router.get("/number-of-sessions", (req, res) => {
-  // Return number of active sessions 
+  // Return number of active sessions
   res.status(200).end();
 });
 

@@ -4,6 +4,10 @@ const bodyParser = require("body-parser");
 const logger = require("morgan");
 const compression = require("compression");
 
+// Utils
+const genericErrorHandler = require("../utils/genericErrorHandler");
+
+
 // Init connection to postgreSQL DB
 require("./config/postgres_config");
 
@@ -34,10 +38,11 @@ app.use("/api/login", loginApi);
 app.use("/api/logout", logoutApi);
 app.use("/api/user", userAPI);
 
+// Generic error handler middleware
+app.use(genericErrorHandler);
+
 // Return 404 response if no route matched
-app.use("*", (req, res) => {
-    res.sendStatus(404).end();
-});
+app.use("*", (req, res) => void res.sendStatus(404).end());
 
 // Initialize REST API server
 const http = require("http").Server(app);
