@@ -6,11 +6,9 @@ const customFormatter = printf(info => `${info.timestamp} ${info.level}: ${info.
 
 const logger = createLogger({
   transports: [new transports.Console()],
-  level: "silly",
-  levels: config.npm.levels,
   format: combine(
-    timestamp(),
     colorize(),
+    timestamp(),
     customFormatter,
     errors({ stack: true }),
     splat(),
