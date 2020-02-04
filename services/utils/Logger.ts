@@ -1,4 +1,6 @@
-const { createLogger, format, transports, config } = require("winston");
+import { createLogger, format, transports } from "winston";
+
+// Destruct format functions to combine
 const { combine, timestamp, prettyPrint, printf, colorize, errors, splat, json } = format;
 
 // Custom Winston formatter for logging
@@ -17,4 +19,4 @@ const logger = createLogger({
   )
 });
 
-module.exports = logger;
+export default logger;
