@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
-
+const compression = require("compression");
 
 // Init connection to postgreSQL DB
 require("./config/postgres_config");
@@ -25,6 +25,7 @@ const app = express();
 app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(compression());
 
 
 // Configure REST API routes
