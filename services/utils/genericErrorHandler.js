@@ -13,4 +13,5 @@ const genericErrorHandler = (error, req, res, next) => {
     res.json(error);
 };
 
+
 module.exports = genericErrorHandler;

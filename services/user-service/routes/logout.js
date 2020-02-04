@@ -18,6 +18,7 @@ router.get("/", isAuthenticated, (req, res, next) => {
     const { userId } = req.sessionValues;
 
     // gRPC call to session service to remove session token
+    // TODO: Throwing an exception here crashes app for some reason
     sessionServiceGrpcClient.removeSession({ userId }, (error) => {
 
       // Handle error from gRPC call
@@ -29,7 +30,7 @@ router.get("/", isAuthenticated, (req, res, next) => {
   }
   catch (error) {
     // Go to the error handling middleware with the error
-    return next(error);
+    next(error);
   }
 });
 

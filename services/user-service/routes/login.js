@@ -34,10 +34,6 @@ router.post("/", [
     // Find user by email address
     const result = await getUserByEmail(email);
 
-    if (result.name === "error") {
-      throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
     if (result.rowCount !== 1) {
       throw new ApiError(`No user found with email address: ${email}.`, HttpStatus.NOT_FOUND);
     }
@@ -56,6 +52,7 @@ router.post("/", [
     sessionServiceGrpcClient.createSession({ userId, email, firstName, lastName, role }, (error, { sessionToken }) => {
 
       // Handle error from gRPC call
+      // TODO: Throwing an exception here crashes app for some reason
       if (error) throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
 
       res.status(200).json({
@@ -71,7 +68,7 @@ router.post("/", [
   }
   catch (error) {
     // Go to the error handling middleware with the error
-    return next(error);
+    next(error);
   }
 });
 

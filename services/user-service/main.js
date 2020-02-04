@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
+const compression = require("compression");
 
 // Utils
 const genericErrorHandler = require("../utils/genericErrorHandler");
@@ -28,6 +29,7 @@ const app = express();
 app.use(morgan("combined"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(compression());
 
 
 // Configure REST API routes

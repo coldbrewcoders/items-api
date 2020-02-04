@@ -8,7 +8,7 @@ CREATE TABLE UserService.Users (
 	Password VARCHAR(100) NOT NULL,
 	FirstName VARCHAR(100) NOT NULL,
 	LastName VARCHAR(100) NOT NULL,
-  	Role UserService.UserRoles NOT NULL DEFAULT 'BASIC',
+  Role UserService.UserRoles NOT NULL DEFAULT 'BASIC',
 	CreationDate TIMESTAMP WITHOUT TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc'),
 
 	CONSTRAINT check_email CHECK(LENGTH(Email) > 0),
@@ -27,6 +27,6 @@ CREATE TABLE ItemsService.Items (
 	CreatedByUserId INT NOT NULL REFERENCES UserService.Users(Id) ON DELETE CASCADE,
 	LastModifiedByUserId INT REFERENCES UserService.Users(Id) ON DELETE SET NULL,
 
-  	CONSTRAINT check_name CHECK(LENGTH(Name) > 0),
+  CONSTRAINT check_name CHECK(LENGTH(Name) > 0),
 	CONSTRAINT check_description CHECK(LENGTH(Description) > 0)
 );
