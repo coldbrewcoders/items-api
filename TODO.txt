@@ -1,4 +1,5 @@
-* Add JWT auth scheme
-* Create real login endpoint
-* Create GET/POST/PUT/DELETE user endpoints
-* Create GET/POST/PUT/DELETE items endpoints
+
+[] Add https://github.com/inxilpro/node-app-root-path to make imports cleaner and easier to manage
+[] Add a config file that exports all of the env variables in an organized way for use
+[] Refactor the repository to be Typescript based instead of JS
+[] Add Winston logging system to the repository to work in parallel with Morgan
