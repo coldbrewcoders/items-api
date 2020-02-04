@@ -1,4 +1,5 @@
 const { postgresClient } = require("../config/postgres_config");
+const HttpStatus = require("http-status-codes");
 
 
 const addUser = async (email, safePasswordHash, firstName, lastName, role) => {
@@ -7,8 +8,12 @@ const addUser = async (email, safePasswordHash, firstName, lastName, role) => {
     return await postgresClient.query("INSERT INTO UserService.Users (Email, Password, FirstName, LastName, Role) VALUES ($1, $2, $3, $4, $5);", [email, safePasswordHash, firstName, lastName, role]);
   }
   catch (error) {
-    console.error(`User Service: addUser ERROR -> ${error}`);
-    return error;
+    // Check if email unique constraint was violated
+    if (error.constraint === "users_email_key") {
+      throw new ApiError("A user with this email address already exists.", HttpStatus.CONFLICT);
+    }
+
+    throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
 
@@ -18,8 +23,7 @@ const getUserByEmail = async (email) => {
     return await postgresClient.query("SELECT * FROM UserService.Users WHERE Email = $1;", [email]);
   }
   catch (error) {
-    console.error(`User Service: getUserByEmail ERROR -> ${error}`);
-    return error;
+    throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
 
@@ -29,8 +33,7 @@ const getUserById = async (userId) => {
     return await postgresClient.query("SELECT Id, Email, FirstName, LastName, Role, CreationDate FROM UserService.Users WHERE Id = $1;", [userId]);
   }
   catch (error) {
-    console.error(`User Service: getUserById ERROR -> ${error}`);
-    return error;
+    throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
 
@@ -39,8 +42,12 @@ const modifyUserById = async (userId, email, firstName, lastName) => {
     return await postgresClient.query("UPDATE UserService.Users SET Email = $1, FirstName = $2, LastName = $3 WHERE Id = $4 RETURNING *;", [email, firstName, lastName, userId])
   }
   catch (error) {
-    console.error(`User Service: modifyUserById ERROR -> ${error}`);
-    return error;
+    // Check if email unique constraint was violated
+    if (error.constraint === "users_email_key") {
+      throw new ApiError("A user with this email address already exists.", HttpStatus.CONFLICT);
+    }
+
+    throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
 
@@ -49,8 +56,7 @@ const deleteUserById = async (userId) => {
     return await postgresClient.query("DELETE FROM UserService.Users WHERE Id = $1 RETURNING *;", [userId]);
   }
   catch (error) {
-    console.error(`User Service: deleteUserById ERROR -> ${error}`);
-    return error;
+    throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
 

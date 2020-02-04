@@ -34,10 +34,6 @@ router.post("/", [
     // Find user by email address
     const result = await getUserByEmail(email);
 
-    if (result.name === "error") {
-      throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
     if (result.rowCount !== 1) {
       throw new ApiError(`No user found with email address: ${email}.`, HttpStatus.NOT_FOUND);
     }
@@ -71,7 +67,7 @@ router.post("/", [
   }
   catch (error) {
     // Go to the error handling middleware with the error
-    return next(error);
+    next(error);
   }
 });
 

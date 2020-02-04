@@ -30,10 +30,6 @@ router.get("/:userId", [
     // Get user info from user id
     const result = await getUserById(userId);
 
-    if (result.name === "error") {
-      throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
     if (result.rows.length === 0) {
       throw new ApiError("No user with this id exists.", HttpStatus.BAD_REQUEST);
     }
@@ -52,9 +48,8 @@ router.get("/:userId", [
   }
   catch (error) {
     // Go to the error handling middleware with the error
-    return next(error);
+    next(error);
   }
-
 });
 
 router.put("/:userId",  [
@@ -78,10 +73,6 @@ router.put("/:userId",  [
 
     // Modify user values by user id
     const result = await modifyUserById(userId, email, firstName, lastName);
-
-    if (result.name === "error") {
-      throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 
     if (result.rows.length === 0) {
       throw new ApiError("No user with this id exists.", HttpStatus.BAD_REQUEST);
@@ -117,9 +108,8 @@ router.put("/:userId",  [
   }
   catch (error) {
     // Go to the error handling middleware with the error
-    return next(error);
+    next(error);
   }
-
 });
 
 router.delete("/:userId", [
@@ -134,10 +124,6 @@ router.delete("/:userId", [
 
     // Delete user by passed user id
     const result = await deleteUserById(userId);
-
-    if (result.name === "error") {
-      throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
 
     if (result.rows.length === 0) {
       throw new ApiError("No user with this id exists.", HttpStatus.BAD_REQUEST);
@@ -154,9 +140,8 @@ router.delete("/:userId", [
   }
   catch (error) {
     // Go to the error handling middleware with the error
-    return next(error);
+    next(error);
   }
-
 });
 
 module.exports = router;
