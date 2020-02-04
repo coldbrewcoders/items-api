@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
-const logger = require("morgan");
+const morgan = require("morgan");
 
 // Utils
 const genericErrorHandler = require("../utils/genericErrorHandler");
@@ -25,7 +25,7 @@ const userAPI = require("./routes/user");
 const app = express();
 
 // Apply global middleware
-app.use(logger("dev"));
+app.use(morgan("combined"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 

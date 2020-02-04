@@ -22,7 +22,8 @@
     "lodash": "4.17.15",
     "morgan": "1.9.1",
     "pg": "7.17.1",
-    "redis": "2.8.0"
+    "redis": "2.8.0",
+    "winston": "3.2.1"
   },
   "devDependencies": {
     "nodemon": "2.0.2"
