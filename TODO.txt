@@ -1,5 +1,8 @@
-TO DO - DRINK MORE COFFEE
+TO DO - DRINK MORE COFFEE!!
 
+[] Figure out how to handle errors in gRPC callbacks (App crashes when ApiError is thrown)
 [] Add https://github.com/inxilpro/node-app-root-path to make imports cleaner and easier to manage
 [] Add a config file that exports all of the env variables in an organized way for use
 [] Refactor the repository to be Typescript based instead of JS
+[] Build out session service API routes
+[] Add RabbitMQ and Notification Service

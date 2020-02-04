@@ -52,6 +52,7 @@ router.post("/", [
     sessionServiceGrpcClient.createSession({ userId, email, firstName, lastName, role }, (error, { sessionToken }) => {
 
       // Handle error from gRPC call
+      // TODO: Throwing an exception here crashes app for some reason
       if (error) throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
 
       res.status(200).json({

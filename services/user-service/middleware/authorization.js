@@ -4,6 +4,9 @@ const HttpStatus = require("http-status-codes");
 // gRPC
 const { sessionServiceGrpcClient } = require("../config/grpc_config");
 
+// Utils
+const ApiError = require("../../utils/ApiError");
+
 
 const verifySessionToken = (req, res, next) => {
 
@@ -26,9 +29,8 @@ const verifySessionToken = (req, res, next) => {
   // Make gRPC call to session service to validate session token
   sessionServiceGrpcClient.validateSession({ sessionToken }, (error, sessionValues) => {
 
-    if (error) {
-      throw new ApiError(error, HttpStatus.UNAUTHORIZED);
-    }
+    // TODO: Throwing an exception here crashes app for some reason
+    if (error) throw new ApiError(error, HttpStatus.UNAUTHORIZED);
 
     // Add session values to req object
     req.sessionValues = sessionValues;

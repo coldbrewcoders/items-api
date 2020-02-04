@@ -30,7 +30,7 @@ router.get("/:userId", [
     // Get user info from user id
     const result = await getUserById(userId);
 
-    if (result.rows.length === 0) {
+    if (result.rowCount !== 1) {
       throw new ApiError("No user with this id exists.", HttpStatus.BAD_REQUEST);
     }
 
@@ -74,7 +74,7 @@ router.put("/:userId",  [
     // Modify user values by user id
     const result = await modifyUserById(userId, email, firstName, lastName);
 
-    if (result.rows.length === 0) {
+    if (result.rowCount !== 1) {
       throw new ApiError("No user with this id exists.", HttpStatus.BAD_REQUEST);
     }
 
@@ -84,6 +84,7 @@ router.put("/:userId",  [
       const { email, firstname: firstName, lastname: lastName, role } = result.rows[0];
 
       // Make gRPC call to session service to replace old session with updated session
+      // TODO: Throwing an exception here crashes app for some reason
       sessionServiceGrpcClient.replaceSession({ userId, email, firstName, lastName, role }, (error, { sessionToken }) => {
 
         // Handle error from gRPC call
@@ -125,11 +126,12 @@ router.delete("/:userId", [
     // Delete user by passed user id
     const result = await deleteUserById(userId);
 
-    if (result.rows.length === 0) {
+    if (result.rowCount !== 1) {
       throw new ApiError("No user with this id exists.", HttpStatus.BAD_REQUEST);
     }
 
     // Make gRPC call to session service to remove deleted user's session
+    // TODO: Throwing an exception here crashes app for some reason
     sessionServiceGrpcClient.removeSession({ userId }, (error) => {
 
       // Handle error from gRPC call

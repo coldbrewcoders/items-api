@@ -10,6 +10,9 @@ const { validationCheck } = require("../middleware/validation");
 // Repository
 const { getAllItems, getItemsCreatedByUser, getItemsModifiedByUser, getItemById, createItem, updateItemById, deleteItemById } = require("../repository/queries");
 
+// Utils
+const ApiError = require("../../utils/ApiError");
+
 
 router.get("/all", isAuthenticated, async (req, res, next) => {
   try {
@@ -92,7 +95,7 @@ router.get("/:itemId", [
     const result = await getItemById(itemId);
 
     // Check if item was found for id
-    if (result.rows.length !== 1) {
+    if (result.rowCount !== 1) {
       throw new ApiError(`No item found with id: ${itemId}.`, HttpStatus.NOT_FOUND);
     }
 
@@ -152,7 +155,7 @@ router.put("/:itemId", [
     const result = await updateItemById(itemId, name, description, userId, role);
 
     // If no item was modified, user is unauthorized to modify item
-    if (result.rows.length !== 1) {
+    if (result.rowCount !== 1) {
       throw new ApiError(`User does not have permission to modify item: ${itemId}`, HttpStatus.FORBIDDEN);
     }
 
@@ -180,7 +183,7 @@ router.delete("/:itemId", [
     const result = await deleteItemById(itemId, userId, role);
 
     // If no item was modified, user is unauthorized to modify item
-    if (result.rows.length !== 1) {
+    if (result.rowCount !== 1) {
       throw new ApiError(`User does not have permission to delete item: ${itemId}`, HttpStatus.FORBIDDEN);
     }
 

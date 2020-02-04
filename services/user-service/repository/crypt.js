@@ -1,6 +1,9 @@
 const bcrypt = require("bcrypt");
 const HttpStatus = require("http-status-codes");
 
+// Utils
+const ApiError = require("../../utils/ApiError");
+
 
 const SALT_ROUNDS = 10;
 

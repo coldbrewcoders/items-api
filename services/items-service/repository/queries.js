@@ -1,6 +1,9 @@
 const { postgresClient } = require("../config/postgres_config");
 const HttpStatus = require("http-status-codes");
 
+// Utils
+const ApiError = require("../../utils/ApiError");
+
 
 const getAllItems = async () => {
   try {
