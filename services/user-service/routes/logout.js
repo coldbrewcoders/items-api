@@ -12,21 +12,22 @@ const { sessionServiceGrpcClient } = require("../config/grpc_config");
 const ApiError = require("../../utils/ApiError");
 
 
-router.get("/", isAuthenticated, (req, res, next) => {
+router.get("/", isAuthenticated, async (req, res, next) => {
   try {
     // Get user id from session values
     const { userId } = req.sessionValues;
 
-    // gRPC call to session service to remove session token
-    // TODO: Throwing an exception here crashes app for some reason
-    sessionServiceGrpcClient.removeSession({ userId }, (error) => {
-
+    try {
+      // gRPC call to session service to remove session token
+      await sessionServiceGrpcClient.removeSession().sendMessage({ userId });
+    }
+    catch (error) {
       // Handle error from gRPC call
-      if (error) throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new ApiError("An internal server error occurred.", HttpStatus.UNAUTHORIZED);
+    }
 
-      // Session removed, user is logged out
-      res.status(200).end();
-    });
+    // Session removed, user is logged out
+    res.sendStatus(200);
   }
   catch (error) {
     // Go to the error handling middleware with the error

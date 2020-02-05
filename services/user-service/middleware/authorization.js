@@ -8,7 +8,7 @@ const { sessionServiceGrpcClient } = require("../config/grpc_config");
 const ApiError = require("../../utils/ApiError");
 
 
-const verifySessionToken = (req, res, next) => {
+const verifySessionToken = async (req, res, next) => {
 
   // Get Authorization header value
   const authHeader = req.header("Authorization");
@@ -26,16 +26,17 @@ const verifySessionToken = (req, res, next) => {
     throw new ApiError("Session token is missing from Authentication header", HttpStatus.UNAUTHORIZED);
   }
 
-  // Make gRPC call to session service to validate session token
-  sessionServiceGrpcClient.validateSession({ sessionToken }, (error, sessionValues) => {
-
-    // TODO: Throwing an exception here crashes app for some reason
-    if (error) throw new ApiError(error, HttpStatus.UNAUTHORIZED);
+  try {
+    // Make gRPC call to session service to validate session token
+    const sessionValues = await sessionServiceGrpcClient.validateSession().sendMessage({ sessionToken });
 
     // Add session values to req object
     req.sessionValues = sessionValues;
     next();
-  });
+  }
+  catch (error) {
+    throw new ApiError("Error validating session token", HttpStatus.UNAUTHORIZED);
+  }
 }
 
 const isAuthenticatedMiddleware = (req, res, next) => {

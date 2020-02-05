@@ -1,5 +1,6 @@
 const grpc = require("grpc");
 const protoLoader = require("@grpc/proto-loader");
+const grpcPromise = require("grpc-promise");
 
 // Get path to proto file
 const path = require("path");
@@ -13,6 +14,9 @@ const sessionPackage = grpc.loadPackageDefinition(protoFile).session;
 
 // Create client to make gRPC calls to auth server
 const sessionServiceGrpcClient = new sessionPackage.SessionService(process.env.SESSION_SERVICE_GRPC_URL, grpc.credentials.createInsecure());
+
+// Promisify gRPC client
+grpcPromise.promisifyAll(sessionServiceGrpcClient);
 
 
 module.exports = {
