@@ -63,7 +63,7 @@ router.post("/", [
     }
     catch (error) {
       // Handle error from gRPC call
-      throw new ApiError(error, HttpStatus.UNAUTHORIZED);
+      throw new ApiError("Error creating user session token", HttpStatus.UNAUTHORIZED);
     }
   }
   catch (error) {

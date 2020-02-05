@@ -35,7 +35,7 @@ const verifySessionToken = async (req, res, next) => {
     next();
   }
   catch (error) {
-    next(new ApiError(error, HttpStatus.UNAUTHORIZED));
+    next(new ApiError("Error validating session token", HttpStatus.UNAUTHORIZED));
   }
 }
 
