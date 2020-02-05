@@ -19,7 +19,7 @@ router.get("/all", isAuthenticated, async (req, res, next) => {
     // Get list of all items from DB
     const result = await getAllItems();
 
-    res.status(200).json(result.rows);
+    res.json(result.rows);
   }
   catch (error) {
     next(error);
@@ -34,7 +34,7 @@ router.get("/my-items", isAuthenticated, async (req, res, next) => {
     // Get all items created by current authenticated user
     const result = await getItemsCreatedByUser(userId);
 
-    res.status(200).json(result.rows);
+    res.json(result.rows);
   }
   catch (error) {
     next(error);
@@ -54,7 +54,7 @@ router.get("/created-by-user/:userId", [
     // Get all items created by passed user id
     const result = await getItemsCreatedByUser(userId);
 
-    res.status(200).json(result.rows);
+    res.json(result.rows);
   }
   catch (error) {
     next(error);
@@ -74,7 +74,7 @@ router.get("/last-modified-by-user/:userId", [
     // Get all items last modified by a user
     const result = await getItemsModifiedByUser(userId);
 
-    res.status(200).json(result.rows);
+    res.json(result.rows);
   }
   catch (error) {
     next(error);
@@ -99,7 +99,7 @@ router.get("/:itemId", [
       throw new ApiError(`No item found with id: ${itemId}.`, HttpStatus.NOT_FOUND);
     }
 
-    res.status(200).json(result.rows[0]);
+    res.json(result.rows[0]);
   }
   catch (error) {
     next(error);
@@ -125,7 +125,7 @@ router.post("/", [
     // Create a new item for this user
     const result = await createItem(name, description, userId);
 
-    res.status(200).json(result.rows[0]);
+    res.json(result.rows[0]);
   }
   catch (error) {
     next(error);
@@ -159,7 +159,7 @@ router.put("/:itemId", [
       throw new ApiError(`User does not have permission to modify item: ${itemId}`, HttpStatus.FORBIDDEN);
     }
 
-    res.status(200).json(result.rows[0]);
+    res.json(result.rows[0]);
   }
   catch (error) {
     next(error);
@@ -187,7 +187,7 @@ router.delete("/:itemId", [
       throw new ApiError(`User does not have permission to delete item: ${itemId}`, HttpStatus.FORBIDDEN);
     }
 
-    res.status(200).end();
+    res.sendStatus(200);
   }
   catch (error) {
     next(error);

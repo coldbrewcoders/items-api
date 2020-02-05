@@ -48,14 +48,11 @@ router.post("/", [
       throw new ApiError("Incorrect password.", HttpStatus.UNAUTHORIZED);
     }
 
-    // Create session for authenticated user with gRPC call to session service
-    sessionServiceGrpcClient.createSession({ userId, email, firstName, lastName, role }, (error, { sessionToken }) => {
+    try {
+      // Create session for authenticated user with gRPC call to session service
+      const { sessionToken } = await sessionServiceGrpcClient.createSession().sendMessage({ userId, email, firstName, lastName, role });
 
-      // Handle error from gRPC call
-      // TODO: Throwing an exception here crashes app for some reason
-      if (error) throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
-
-      res.status(200).json({
+      res.json({
         sessionToken,
         userId,
         email,
@@ -63,8 +60,11 @@ router.post("/", [
         lastName,
         role
       });
-
-    });
+    }
+    catch (error) {
+      // Handle error from gRPC call
+      throw new ApiError(error, HttpStatus.UNAUTHORIZED);
+    }
   }
   catch (error) {
     // Go to the error handling middleware with the error

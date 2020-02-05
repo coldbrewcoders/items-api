@@ -37,7 +37,7 @@ router.get("/:userId", [
     // Get values returned from query
     const { id, email, firstname: firstName, lastname: lastName, role, creationdate: creationDate } = result.rows[0];
 
-    res.status(200).json({
+    res.json({
       id,
       email,
       firstName,
@@ -83,15 +83,12 @@ router.put("/:userId",  [
       // Get values returned from query
       const { email, firstname: firstName, lastname: lastName, role } = result.rows[0];
 
-      // Make gRPC call to session service to replace old session with updated session
-      // TODO: Throwing an exception here crashes app for some reason
-      sessionServiceGrpcClient.replaceSession({ userId, email, firstName, lastName, role }, (error, { sessionToken }) => {
-
-        // Handle error from gRPC call
-        if (error) throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
+      try {
+        // Make gRPC call to session service to replace old session with updated session
+        const { sessionToken } = sessionServiceGrpcClient.replaceSession().sendMessage({ userId, email, firstName, lastName, role });
 
         // Return updated user values with new session token
-        res.status(200).json({
+        res.json({
           sessionToken,
           id: userId,
           email,
@@ -99,12 +96,15 @@ router.put("/:userId",  [
           lastName,
           role
         });
-
-      });
+      }
+      catch (error) {
+        // Handle error from gRPC call
+        throw new ApiError("An internal server error occurred.", HttpStatus.UNAUTHORIZED);
+      }
     }
     else {
       // User was admin making request on another user's behalf
-      res.status(200).end();
+      res.sendStatus(200);
     }
   }
   catch (error) {
@@ -130,15 +130,16 @@ router.delete("/:userId", [
       throw new ApiError("No user with this id exists.", HttpStatus.BAD_REQUEST);
     }
 
-    // Make gRPC call to session service to remove deleted user's session
-    // TODO: Throwing an exception here crashes app for some reason
-    sessionServiceGrpcClient.removeSession({ userId }, (error) => {
+    try {
+      // Make gRPC call to session service to remove deleted user's session
+      await sessionServiceGrpcClient.removeSession().sendMessage({ userId });
 
+      res.sendStatus(200);
+    }
+    catch (error) {
       // Handle error from gRPC call
-      if (error) throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
-
-      res.status(200).end();
-    });
+      throw new ApiError("An internal server error occurred.", HttpStatus.UNAUTHORIZED);
+    }
   }
   catch (error) {
     // Go to the error handling middleware with the error
