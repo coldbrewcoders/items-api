@@ -1,4 +1,3 @@
-// TODO: ES6fy
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -6,8 +5,10 @@ import { createServer } from "http";
 import express from "express";
 import bodyParser from "body-parser";
 import morgan from "morgan";
+import compression from "compression";
 
 // Utils
+import notFoundHandler from "../utils/notFoundHandler";
 import genericErrorHandler from "../utils/genericErrorHandler";
 
 // Init connection to postgreSQL DB
@@ -23,7 +24,6 @@ import "./config/grpc_config";
 // import logoutApi from "./routes/logout";
 // import userAPI from "./routes/user";
 
-
 // Configure express server
 const app = express();
 
@@ -31,7 +31,7 @@ const app = express();
 app.use(morgan("combined"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
+app.use(compression());
 
 // Configure REST API routes
 // app.use("/api/signup", signupApi);
@@ -39,13 +39,11 @@ app.use(bodyParser.json());
 // app.use("/api/logout", logoutApi);
 // app.use("/api/user", userAPI);
 
+// Return 404 response if no route matched
+app.use("*", notFoundHandler);
+
 // Generic error handler middleware
 app.use(genericErrorHandler);
-
-// Return 404 response if no route matched
-app.use("*", (_req, res): void => {
-  res.sendStatus(404).end();
-});
 
 // Initialize REST API server
 const server = createServer(app);
