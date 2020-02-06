@@ -10,11 +10,9 @@ import morgan from "morgan";
 // Utils
 import genericErrorHandler from "../utils/genericErrorHandler";
 
-// TODO: ES6fy
 // Init connection to postgreSQL DB
 import "./config/postgres_config";
 
-// TODO: ES6fy
 // Start gRPC server
 import "./config/grpc_config";
 
