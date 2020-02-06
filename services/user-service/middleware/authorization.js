@@ -1,43 +1,41 @@
 const get = require("lodash/get");
+const HttpStatus = require("http-status-codes");
 
 // gRPC
 const { sessionServiceGrpcClient } = require("../config/grpc_config");
 
+// Utils
+const ApiError = require("../../utils/ApiError");
 
-const verifySessionToken = (req, res, next) => {
+
+const verifySessionToken = async (req, res, next) => {
+
+  // Get Authorization header value
+  const authHeader = req.header("Authorization");
+
+  if (!authHeader) {
+    // Unauthorized if Authentication header is missing from request
+    throw new ApiError("Authentication header is not present", HttpStatus.UNAUTHORIZED);
+  }
+
+  // Parse session token from Authorization header
+  const sessionToken = authHeader.replace("Bearer ", "");
+
+  if (!sessionToken) {
+    // Unauthorized if session token is missing from request
+    throw new ApiError("Session token is missing from Authentication header", HttpStatus.UNAUTHORIZED);
+  }
+
   try {
-    // Get Authorization header value
-    const authHeader = req.header("Authorization");
-
-    if (!authHeader) {
-      // Unauthorized if session token is missing from request
-      return void res.status(401).end();
-    }
-
-    // Parse session token from Authorization header
-    const sessionToken = authHeader.replace("Bearer ", "");
-
-    if (!sessionToken) {
-      // Unauthorized if session token is missing from request
-      return void res.status(401).end();
-    }
-
     // Make gRPC call to session service to validate session token
-    sessionServiceGrpcClient.validateSession({ sessionToken }, (error, sessionValues) => {
+    const sessionValues = await sessionServiceGrpcClient.validateSession().sendMessage({ sessionToken });
 
-      if (error) {
-        return void res.status(401).end();
-      }
-
-      // Add session values to req object
-      req.sessionValues = sessionValues;
-      next();
-    });
-
+    // Add session values to req object
+    req.sessionValues = sessionValues;
+    next();
   }
   catch (error) {
-    console.error(error);
-    return void res.status(500).end();
+    throw new ApiError("Error validating session token", HttpStatus.UNAUTHORIZED);
   }
 }
 
@@ -47,7 +45,7 @@ const isAuthenticatedMiddleware = (req, res, next) => {
 
   // Check if user is authenticated based on role
   if (role !== "BASIC" && role !== "ADMIN") {
-    return void res.status(401).end();
+    throw new ApiError("User does not have valid permission role", HttpStatus.UNAUTHORIZED);
   }
 
   next();
@@ -59,7 +57,7 @@ const isAuthenticatedAdminMiddleware = (req, res, next) => {
 
   // Check if authenticated user is an admin
   if (role !== "ADMIN") {
-    return void res.status(403).end();
+    throw new ApiError("User does not have an admin role", HttpStatus.FORBIDDEN);
   }
 
   next();
@@ -75,7 +73,7 @@ const isAuthenticatedAdminOrSelfMiddleware = (req, res, next) => {
 
   if (!role || !userId) {
     // No role in session values, unauthorized
-    return void res.status(401).end();
+    throw new ApiError("User does not have valid permission role", HttpStatus.UNAUTHORIZED);
   }
   else if (role === "ADMIN") {
     // User is an admin
@@ -87,7 +85,7 @@ const isAuthenticatedAdminOrSelfMiddleware = (req, res, next) => {
   }
   else {
     // User is neither an admin nor making request on their own behalf
-    return void res.status(403).end();
+    throw new ApiError("User is not an admin or resource owner", HttpStatus.FORBIDDEN);
   }
 }
 

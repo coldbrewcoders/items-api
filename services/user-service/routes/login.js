@@ -34,10 +34,6 @@ router.post("/", [
     // Find user by email address
     const result = await getUserByEmail(email);
 
-    if (result.name === "error") {
-      throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
     if (result.rowCount !== 1) {
       throw new ApiError(`No user found with email address: ${email}.`, HttpStatus.NOT_FOUND);
     }
@@ -52,13 +48,11 @@ router.post("/", [
       throw new ApiError("Incorrect password.", HttpStatus.UNAUTHORIZED);
     }
 
-    // Create session for authenticated user with gRPC call to session service
-    sessionServiceGrpcClient.createSession({ userId, email, firstName, lastName, role }, (error, { sessionToken }) => {
+    try {
+      // Create session for authenticated user with gRPC call to session service
+      const { sessionToken } = await sessionServiceGrpcClient.createSession().sendMessage({ userId, email, firstName, lastName, role });
 
-      // Handle error from gRPC call
-      if (error) throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
-
-      res.status(200).json({
+      res.json({
         sessionToken,
         userId,
         email,
@@ -66,12 +60,15 @@ router.post("/", [
         lastName,
         role
       });
-
-    });
+    }
+    catch (error) {
+      // Handle error from gRPC call
+      throw new ApiError("Error creating user session token", HttpStatus.UNAUTHORIZED);
+    }
   }
   catch (error) {
     // Go to the error handling middleware with the error
-    return next(error);
+    next(error);
   }
 });
 

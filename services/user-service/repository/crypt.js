@@ -1,8 +1,11 @@
 const bcrypt = require("bcrypt");
+const HttpStatus = require("http-status-codes");
+
+// Utils
+const ApiError = require("../../utils/ApiError");
 
 
 const SALT_ROUNDS = 10;
-
 
 const generatePasswordHash = async (password) => {
   try {
@@ -10,8 +13,7 @@ const generatePasswordHash = async (password) => {
     return await bcrypt.hash(password, SALT_ROUNDS);
   }
   catch (error) {
-    console.error(`User Service: generatePasswordHash ERROR -> ${error}`);
-    return false;
+    throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
 
@@ -21,8 +23,7 @@ const verifyPassword = async (submittedPassword, passwordHash) => {
     return await bcrypt.compare(submittedPassword, passwordHash);
   }
   catch (error) {
-    console.error(`User Service: verifyPassword ERROR -> ${error}`);
-    return false;
+    throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
 

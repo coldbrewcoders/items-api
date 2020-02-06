@@ -1,7 +1,12 @@
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
-const logger = require("morgan");
+const morgan = require("morgan");
+const compression = require("compression");
+
+// Utils
+const notFoundHandler = require("../utils/notFoundHandler");
+const genericErrorHandler = require("../utils/genericErrorHandler");
 
 
 // Connect with PostgreSQL DB
@@ -19,13 +24,20 @@ const itemsApi = require("./routes/items");
 const app = express();
 
 // Apply global middleware
-app.use(logger("dev"));
+app.use(morgan("combined"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(compression());
 
 
 // Apply REST API routes
 app.use("/api/items", itemsApi);
+
+// Return 404 response if no route matched
+app.use("*", notFoundHandler);
+
+// Generic error handler middleware
+app.use(genericErrorHandler);
 
 
 // Initialize server

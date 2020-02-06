@@ -1,7 +1,9 @@
-TO DO - DRINK MORE COFFEE
+TO DO - DRINK MORE COFFEE!!
 
 [] Add https://github.com/inxilpro/node-app-root-path to make imports cleaner and easier to manage
 [] Add a config file that exports all of the env variables in an organized way for use
 [] Refactor the repository to be Typescript based instead of JS
 [] Investigate wether https://www.npmjs.com/package/lusca is worth using or not. It's in the TS boilerplate repository
 [] Explore https://github.com/expressjs/errorhandler#readme as error handling middleware over the custom 'genericErrorHandler` one
+[] Build out session service API routes
+[] Add RabbitMQ and Notification Service
