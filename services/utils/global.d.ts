@@ -17,4 +17,4 @@ declare namespace Express {
     matchedData?: IMatchedData,
     sessionValues?: ISessionValues,
   }
- }
+}
