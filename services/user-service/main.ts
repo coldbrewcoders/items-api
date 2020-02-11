@@ -26,7 +26,7 @@ import "./config/grpc_config";
 import signupApi from "./routes/signup";
 import loginApi from "./routes/login";
 import logoutApi from "./routes/logout";
-import userAPI from "./routes/user";
+import userApi from "./routes/user";
 
 // Configure express server
 const app: Application = express();
@@ -41,7 +41,7 @@ app.use(compression());
 app.use("/api/signup", signupApi);
 app.use("/api/login", loginApi);
 app.use("/api/logout", logoutApi);
-app.use("/api/user", userAPI);
+app.use("/api/user", userApi);
 
 // Return 404 response if no route matched
 app.use("*", notFoundHandler);
