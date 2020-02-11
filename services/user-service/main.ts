@@ -23,7 +23,7 @@ import "./config/grpc_config";
 
 
 // Import REST API routes
-// import signupApi from "./routes/signup";
+import signupApi from "./routes/signup";
 // import loginApi from "./routes/login";
 // import logoutApi from "./routes/logout";
 // import userAPI from "./routes/user";
@@ -38,7 +38,7 @@ app.use(bodyParser.json());
 app.use(compression());
 
 // Configure REST API routes
-// app.use("/api/signup", signupApi);
+app.use("/api/signup", signupApi);
 // app.use("/api/login", loginApi);
 // app.use("/api/logout", logoutApi);
 // app.use("/api/user", userAPI);
