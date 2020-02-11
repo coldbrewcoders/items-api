@@ -24,9 +24,9 @@ import "./config/grpc_config";
 
 // Import REST API routes
 import signupApi from "./routes/signup";
-// import loginApi from "./routes/login";
-// import logoutApi from "./routes/logout";
-// import userAPI from "./routes/user";
+import loginApi from "./routes/login";
+import logoutApi from "./routes/logout";
+import userAPI from "./routes/user";
 
 // Configure express server
 const app: Application = express();
@@ -39,9 +39,9 @@ app.use(compression());
 
 // Configure REST API routes
 app.use("/api/signup", signupApi);
-// app.use("/api/login", loginApi);
-// app.use("/api/logout", logoutApi);
-// app.use("/api/user", userAPI);
+app.use("/api/login", loginApi);
+app.use("/api/logout", logoutApi);
+app.use("/api/user", userAPI);
 
 // Return 404 response if no route matched
 app.use("*", notFoundHandler);

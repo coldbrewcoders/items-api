@@ -37,7 +37,7 @@ router.post("/", [
   body("role")
     .isIn(["BASIC", "ADMIN"])
 
-], validationCheck, async (req: Request, res: Response, next: NextFunction) => {
+], validationCheck, async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     // Get validated request data
     const { email, password, firstName, lastName, role } = req.matchedData;
@@ -58,6 +58,5 @@ router.post("/", [
     return next(error);
   }
 });
-
 
 export default router;
