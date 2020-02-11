@@ -1,5 +1,6 @@
 import { CustomError } from "ts-custom-error";
 
+
 class ApiError extends CustomError {
 
   // Additional member variables
@@ -7,7 +8,7 @@ class ApiError extends CustomError {
   context: any;
   date: Date;
 
-  constructor(message: string, httpStatusCode: number = 500, context?: any) {
+  constructor(message: string | Object, httpStatusCode: number = 500, context?: any) {
 
     super(message);
 

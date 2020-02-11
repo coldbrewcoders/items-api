@@ -1,27 +1,26 @@
-// import { Request, Response, NextFunction } from "express";
-// import { validationResult, matchedData, ValidationError, Result } from "express-validator";
-// import HttpStatus from "http-status-codes";
+import { validationResult, matchedData } from "express-validator";
+import HttpStatus from "http-status-codes";
 
-// // Utils
-// const ApiError = require("../../utils/ApiError");
+// Utils
+import ApiError from "../../utils/ApiError";
 
-
-// const validationCheck = (req: Request, _res: Response, next: NextFunction) => {
-
-//   // Check request for validation errors
-//   const validationErrors: Result<ValidationError> = validationResult(req);
-
-//   if (!validationErrors.isEmpty()) {
-//     // If there are validation errors, return 400 status
-//     throw new ApiError({ error: validationErrors.mapped() }, HttpStatus.BAD_REQUEST);
-//   }
-
-//   // If there are no validation errors, proceed
-//   req.matchedData = matchedData(req);
-//   next();
-// }
+// Types
+import { Request, Response, NextFunction } from "express";
 
 
-// module.exports = {
-//   validationCheck
-// };
+const validationCheck = (req: Request, _res: Response, next: NextFunction): void => {
+
+  // Check request for validation errors
+  const validationErrors = validationResult(req);
+
+  if (!validationErrors.isEmpty()) {
+    // If there are validation errors, return 400 status
+    throw new ApiError({ error: validationErrors.mapped() }, HttpStatus.BAD_REQUEST);
+  }
+
+  // If there are no validation errors, proceed
+  req.matchedData = matchedData(req);
+  next();
+}
+
+export { validationCheck };

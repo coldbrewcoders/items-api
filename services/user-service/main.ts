@@ -11,6 +11,10 @@ import compression from "compression";
 import notFoundHandler from "../utils/notFoundHandler";
 import genericErrorHandler from "../utils/genericErrorHandler";
 
+// Types
+import { Application } from "express";
+import { Server } from "http";
+
 // Init connection to postgreSQL DB
 import "./config/postgres_config";
 
@@ -25,7 +29,7 @@ import "./config/grpc_config";
 // import userAPI from "./routes/user";
 
 // Configure express server
-const app = express();
+const app: Application = express();
 
 // Apply global middleware
 app.use(morgan("combined"));
@@ -46,7 +50,7 @@ app.use("*", notFoundHandler);
 app.use(genericErrorHandler);
 
 // Initialize REST API server
-const server = createServer(app);
+const server: Server = createServer(app);
 
 // Start API server
 server.listen(process.env.USER_SERVICE_API_PORT, () => console.log(`User Service REST API server listening on port ${process.env.USER_SERVICE_API_PORT}`));
