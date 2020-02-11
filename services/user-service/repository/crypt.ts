@@ -1,13 +1,13 @@
-const bcrypt = require("bcrypt");
-const HttpStatus = require("http-status-codes");
+import bcrypt from "bcrypt";
+import HttpStatus from "http-status-codes";
 
 // Utils
-const ApiError = require("../../utils/ApiError");
+import ApiError from "../../utils/ApiError";
 
 
 const SALT_ROUNDS = 10;
 
-const generatePasswordHash = async (password) => {
+const generatePasswordHash = async (password: string): Promise<string> => {
   try {
     // Generate hashed password safe for storage
     return await bcrypt.hash(password, SALT_ROUNDS);
@@ -17,7 +17,7 @@ const generatePasswordHash = async (password) => {
   }
 }
 
-const verifyPassword = async (submittedPassword, passwordHash) => {
+const verifyPassword = async (submittedPassword: string, passwordHash: string): Promise<boolean> => {
   try {
     // Verify that submitted password is correct
     return await bcrypt.compare(submittedPassword, passwordHash);
@@ -28,7 +28,4 @@ const verifyPassword = async (submittedPassword, passwordHash) => {
 }
 
 
-module.exports = {
-  generatePasswordHash,
-  verifyPassword
-};
+export { generatePasswordHash, verifyPassword };
