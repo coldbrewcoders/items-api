@@ -55,7 +55,7 @@ router.post("/", [
   }
   catch (error) {
     // Go to the error handling middleware with the error
-    return next(error);
+    next(error);
   }
 });
 

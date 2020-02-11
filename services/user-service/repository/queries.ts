@@ -2,7 +2,7 @@ import { postgresClient } from "../config/postgres_config";
 import HttpStatus from "http-status-codes";
 
 // Utils
-const ApiError = require("../../utils/ApiError");
+import ApiError from "../../utils/ApiError";
 
 // Types
 import { QueryResult } from "pg";

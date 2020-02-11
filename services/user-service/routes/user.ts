@@ -3,7 +3,7 @@ import { param, body } from "express-validator";
 import HttpStatus from "http-status-codes";
 
 // Middleware
-import { isAuthenticatedAdmin, isAuthenticatedAdminOrSelf } from "../middleware/authorization";
+import { isAuthenticatedAdminOrSelf } from "../middleware/authorization";
 import { validationCheck } from "../middleware/validation";
 
 // Repository

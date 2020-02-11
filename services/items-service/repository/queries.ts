@@ -1,11 +1,14 @@
-const { postgresClient } = require("../config/postgres_config");
-const HttpStatus = require("http-status-codes");
+import { postgresClient } from "../config/postgres_config";
+import HttpStatus from "http-status-codes";
 
 // Utils
-const ApiError = require("../../utils/ApiError");
+import ApiError from "../../utils/ApiError";
+
+// Types
+import { QueryResult } from "pg";
 
 
-const getAllItems = async () => {
+const getAllItems = async (): Promise<QueryResult<any>> => {
   try {
     // Get all items
     return await postgresClient.query("SELECT * FROM ItemsService.Items;");
@@ -15,17 +18,17 @@ const getAllItems = async () => {
   }
 }
 
-const getItemsCreatedByUser = async (userId) => {
+const getItemsCreatedByUser = async (userId: string): Promise<QueryResult<any>> => {
   try {
     // Return all items created by a specific user
-    return await postgresClient.query("SELECT * FROM ItemsService.Items WHERE CreatedByUserId = $1;", [userId]);
+    return await postgresClient.query("SELECT * FROM ItemsService.Items WHERE CreatedByUserId =: string $1;", [userId]);
   }
   catch (error) {
     throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
 
-const getItemsModifiedByUser = async (userId) => {
+const getItemsModifiedByUser = async (userId: string): Promise<QueryResult<any>> => {
   try {
     // Return all items last modified by a specific user
     return await postgresClient.query("SELECT * FROM ItemsService.Items WHERE LastModifiedByUserId = $1;", [userId]);
@@ -35,7 +38,7 @@ const getItemsModifiedByUser = async (userId) => {
   }
 }
 
-const getItemById = async (itemId) => {
+const getItemById = async (itemId: string): Promise<QueryResult<any>> => {
   try {
     // Return a specific item by id
     return await postgresClient.query("SELECT * FROM ItemsService.Items WHERE Id = $1;", [itemId]);
@@ -45,7 +48,7 @@ const getItemById = async (itemId) => {
   }
 }
 
-const createItem = async (name, description, userId) => {
+const createItem = async (name: string, description: string, userId: string): Promise<QueryResult<any>> => {
   try {
     // Create a new item entry
     return await postgresClient.query("INSERT INTO ItemsService.Items (Name, Description, CreatedByUserId) VALUES ($1, $2, $3) RETURNING *;", [name, description, userId]);
@@ -60,7 +63,7 @@ const createItem = async (name, description, userId) => {
   }
 }
 
-const updateItemById = async (itemId, name, description, userId, role) => {
+const updateItemById = async (itemId: string, name: string, description: string, userId: string, role: string): Promise<QueryResult<any>> => {
   try {
     // Update existing item's name or description (user must be an admin or own this item)
     return await postgresClient.query("UPDATE ItemsService.Items SET Name = $1, Description = $2, LastModifiedByUserId = $4 WHERE Id = $3 AND (CreatedByUserId = $4 OR $5 = 'ADMIN') RETURNING *;", [name, description, itemId, userId, role]);
@@ -75,7 +78,7 @@ const updateItemById = async (itemId, name, description, userId, role) => {
   }
 }
 
-const deleteItemById = async (itemId, userId, role) => {
+const deleteItemById = async (itemId: string, userId: string, role: string): Promise<QueryResult<any>> => {
   try {
     // Delete item entry (user must be an admin or own this item)
     return await postgresClient.query("DELETE FROM ItemsService.Items WHERE Id = $1 AND (CreatedByUserId = $2 OR $3 = 'ADMIN') RETURNING *;", [itemId, userId, role]);
@@ -86,7 +89,7 @@ const deleteItemById = async (itemId, userId, role) => {
 }
 
 
-module.exports = {
+export {
   getAllItems,
   getItemsCreatedByUser,
   getItemsModifiedByUser,
