@@ -1,18 +1,23 @@
-const express = require("express");
-const router = express.Router();
-const HttpStatus = require("http-status-codes");
+import express from "express";
+import HttpStatus from "http-status-codes";
 
 // Middleware
-const { isAuthenticated } = require("../middleware/authorization");
+import { isAuthenticated } from "../middleware/authorization";
 
 // gRPC
-const { sessionServiceGrpcClient } = require("../config/grpc_config");
+import { sessionServiceGrpcClient } from "../config/grpc_config";
 
 // Utils
-const ApiError = require("../../utils/ApiError");
+import ApiError from "../../utils/ApiError";
+
+// Types
+import { Request, Response, NextFunction, Router } from "express";
 
 
-router.get("/", isAuthenticated, async (req, res, next) => {
+// Create express router
+const router: Router = express.Router();
+
+router.get("/", isAuthenticated, async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     // Get user id from session values
     const { userId } = req.sessionValues;
@@ -35,5 +40,4 @@ router.get("/", isAuthenticated, async (req, res, next) => {
   }
 });
 
-
-module.exports = router;
+export default router;
