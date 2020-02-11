@@ -12,7 +12,7 @@
     "resolveJsonModule": true,
     "typeRoots": [
       "node_modules/@types",
-      "index.d.ts",
+      "utils/global.d.ts",
     ],
     "paths": {
       "*": [
