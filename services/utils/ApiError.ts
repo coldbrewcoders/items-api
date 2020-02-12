@@ -14,7 +14,8 @@ class ApiError extends CustomError {
     // If the message is not a string, stringify it to work with base Error class
     if (typeof(message) !== "string") {
       serializedMessage = JSON.stringify(message);
-    } else {
+    }
+    else {
       serializedMessage = message as string;
     }
 

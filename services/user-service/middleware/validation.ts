@@ -1,12 +1,12 @@
 import { validationResult, matchedData } from "express-validator";
 import HttpStatus from "http-status-codes";
 
+// Utils
+import ApiError from "../../utils/ApiError";
+
 // Types
 import { Request, Response, NextFunction } from "express";
 import { ValidationError, Result } from "express-validator";
-
-// Utils
-import ApiError from "../../utils/ApiError";
 
 
 const validationCheck = (req: Request, _res: Response, next: NextFunction): void => {
