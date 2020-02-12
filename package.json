@@ -39,6 +39,7 @@
     "@types/morgan": "1.7.37",
     "@types/node": "13.7.0",
     "@types/pg": "7.14.1",
+    "@types/redis": "2.8.15",
     "@types/winston": "2.4.4",
     "nodemon": "2.0.2"
   },
