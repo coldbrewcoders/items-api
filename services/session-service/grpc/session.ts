@@ -1,30 +1,31 @@
 // Repository
-const { signJwt, verifyJwt } = require("../repository/jwt");
-const { getSessionToken, setSessionToken, removeSessionToken } = require("../repository/session_manager");
+import { signJwt, verifyJwt } from "../repository/jwt";
+import { getSessionToken, setSessionToken, removeSessionToken } from "../repository/session_manager";
 
 
-const validateSession = async (call, callback) => {
-  const { sessionToken } = call.request;
+// TODO: What is the `call` type
+const validateSession = async (call: any, callback: Function): Promise<void> => {
+  const sessionToken: string = call.request?.sessionToken;
 
   // Verify JWT is valid and return session values from token payload
-  const sessionValues = verifyJwt(sessionToken);
-  
+  const sessionValues: ISessionValues = verifyJwt(sessionToken);
+
   if (!sessionValues) {
     // If token is invalid, no session values are recieved
     callback("Invalid token", { userId: null, email: null, firstName: null, lastName: null, role: null });
   }
   else {
     // Get user id from session values
-    const { userId } = sessionValues;
+    const userId: number = sessionValues?.userId;
 
     // Get stored session token from Redis
-    const result = await getSessionToken(userId);
+    const cacheSessionToken: string = await getSessionToken(userId);
 
-    if (!result) {
+    if (!cacheSessionToken) {
       // If no token found for user in redis, session has expired
       callback("Token has expired or has been removed", { userId: null, email: null, firstName: null, lastName: null, role: null });
     }
-    else if (result !== sessionToken) {
+    else if (cacheSessionToken !== sessionToken) {
       // If redis token does not match passed token, remove it from redis
       await removeSessionToken(userId);
 
@@ -41,11 +42,12 @@ const validateSession = async (call, callback) => {
   }
 }
 
-const createSession = async (call, callback) => {
+// TODO: What is the `call` type
+const createSession = async (call: any, callback: Function): Promise<void> => {
   const { userId, email, firstName, lastName, role } = call.request;
 
   // Create new signed JWT session token
-  const sessionToken = signJwt(userId, email, firstName, lastName, role);
+  const sessionToken: string = signJwt(userId, email, firstName, lastName, role);
 
   // Check if token creation was successful
   if (!sessionToken) {
@@ -54,30 +56,30 @@ const createSession = async (call, callback) => {
   }
   else {
     // Add session token to redis
-    const result = await setSessionToken(userId, sessionToken);
-    
+    const result: string = await setSessionToken(userId, sessionToken);
+
     if (!result) {
       callback("Error adding session to Redis", { sessionToken: "" });
     }
-    else { 
+    else {
       // Return new JWT
       callback(null, { sessionToken });
     }
   }
 }
 
-const replaceSession = async (call, callback) => {
+const replaceSession = async (call: any, callback: Function): Promise<void> => {
   const { userId, email, firstName, lastName, role } = call.request;
 
   // Remove existing session token from Redis (if exists)
-  const result = await removeSessionToken(userId);
+  const result: Boolean = await removeSessionToken(userId);
 
   if (result === false) {
     callback("Error removing session token from Redis", { sessionToken: "" });
   }
   else {
     // Create new session token with updated session values
-    const sessionToken = signJwt(userId, email, firstName, lastName, role);
+    const sessionToken: string = signJwt(userId, email, firstName, lastName, role);
 
     // Check if token creation was successful
     if (!sessionToken) {
@@ -87,11 +89,11 @@ const replaceSession = async (call, callback) => {
     else {
       // Add new session token to redis
       const result = await setSessionToken(userId, sessionToken);
-    
+
       if (!result) {
         callback("Error adding session to Redis", { sessionToken: "" });
       }
-      else { 
+      else {
         // Return new JWT
         callback(null, { sessionToken });
       }
@@ -99,8 +101,8 @@ const replaceSession = async (call, callback) => {
   }
 }
 
-const removeSession = async (call, callback) => {
-  const { userId } = call.request;
+const removeSession = async (call: any, callback: Function): Promise<void> => {
+  const userId: number = call.request?.userId;
 
   // Remove session from Redis
   const result = await removeSessionToken(userId);
@@ -115,7 +117,7 @@ const removeSession = async (call, callback) => {
 }
 
 
-module.exports = {
+export {
   validateSession,
   createSession,
   replaceSession,
