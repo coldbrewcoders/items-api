@@ -1,5 +1,5 @@
 import grpc from "grpc";
-const protoLoader = require("@grpc/proto-loader");
+import { loadSync } from "@grpc/proto-loader";
 import grpcPromise from "grpc-promise";
 import path from "path";
 
@@ -11,7 +11,7 @@ import { PackageDefinition } from "@grpc/proto-loader";
 const PROTO_PATH: string = path.join(__dirname, "../../../protos/session.proto");
 
 // Get session proto file
-const sessionPackageDefinition: PackageDefinition = protoLoader.loadSync(PROTO_PATH, { keepCase: true });
+const sessionPackageDefinition: PackageDefinition = loadSync(PROTO_PATH, { keepCase: true });
 
 // Load session package and get gRPC client to session service
 // @ts-ignore gRPC proto file is dynamically imported, definition is not generated till runtime
