@@ -7,7 +7,7 @@
     "postbuild": "cpy '**/*.key' ../dist --cwd=services/ --no-overwrite --parents && cpy 'protos/*.proto' ./dist --no-overwrite --parents",
     "session-service": "nodemon ./dist/session-service/main.js",
     "items-service": "nodemon ./dist/items-service/main.js",
-    "user-service": "nodemon ./dist/user-service/main.ts"
+    "user-service": "nodemon ./dist/user-service/main.js"
   },
   "dependencies": {
     "@grpc/proto-loader": "0.5.3",
