@@ -58,7 +58,7 @@ router.get("/:userId", [
   }
 });
 
-router.put("/:userId",  [
+router.put("/:userId", [
 
   param("userId")
     .isInt({ min: 1 }),
