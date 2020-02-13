@@ -5,8 +5,8 @@
     "prebuild": "del dist/",
     "build": "tsc",
     "postbuild": "cpy '**/*.key' ../dist --cwd=services/ --no-overwrite --parents && cpy 'protos/*.proto' ./dist --no-overwrite --parents",
-    "session-service": "nodemon ./dist/session-service/main.js",
-    "items-service": "nodemon ./dist/items-service/main.js",
+    "session-service": "nodemon ./dist/session-service/main.ts",
+    "items-service": "nodemon ./dist/items-service/main.ts",
     "user-service": "nodemon ./dist/user-service/main.ts"
   },
   "dependencies": {
