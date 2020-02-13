@@ -9,12 +9,19 @@ import logger from "../../utils/Logger";
 import { RedisClient } from "redis";
 
 
+interface RedisClientAsync extends RedisClient {
+  getAsync(key: string): Promise<string>,
+  setAsync(key: string, value: string, mode: string, duration: number): Promise<string>,
+  delAsync(key: string): Promise<number>
+}
+
+
 // Promisify all redis calls
 bluebird.promisifyAll(redis.RedisClient.prototype)
 bluebird.promisifyAll(redis.Multi.prototype)
 
 // Establish redis connection
-const redisClient: RedisClient = redis.createClient(process.env.REDIS_URL);
+const redisClient: RedisClientAsync = redis.createClient(process.env.REDIS_URL) as RedisClientAsync;
 
 // Report successful connection
 redisClient.on("connect", () => logger.info("REDIS CONNECTION ESTABLISHED"));
