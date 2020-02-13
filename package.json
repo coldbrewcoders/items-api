@@ -2,7 +2,9 @@
   "name": "items-api",
   "version": "1.0.0",
   "scripts": {
+    "prebuild": "del dist/",
     "build": "tsc",
+    "postbuild": "cpy '**/*.key' ../dist --cwd=services/ --no-overwrite --parents && cpy 'protos/*.proto' ./dist --no-overwrite --parents",
     "session-service": "nodemon ./dist/session-service/main.js",
     "items-service": "nodemon ./dist/items-service/main.js",
     "user-service": "nodemon ./dist/user-service/main.ts"
