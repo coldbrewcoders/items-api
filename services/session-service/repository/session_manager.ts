@@ -7,12 +7,12 @@ import logger from "../../utils/Logger";
 const SESSION_KEY_PREFIX: string = "USER_SESSION";
 
 
-/*** Private module methods ***/
+/** Private module methods **/
 
 const _getSessionKey = (userId: number): string => `${SESSION_KEY_PREFIX}:${userId}`;
 
 
-/*** Public module methods ***/
+/** Public module methods **/
 
 const getSessionToken = async (userId: number): Promise<string> => {
   try {
