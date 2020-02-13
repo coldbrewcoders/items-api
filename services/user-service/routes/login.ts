@@ -1,21 +1,27 @@
-const express = require("express");
-const router = express.Router();
-const { body } = require("express-validator");
-const HttpStatus = require("http-status-codes");
+import express from "express";
+import { body } from "express-validator";
+import HttpStatus from "http-status-codes";
 
 // Middleware
-const { validationCheck } = require("../middleware/validation");
+import { validationCheck } from "../middleware/validation";
 
 // Repository
-const { getUserByEmail } = require("../repository/queries");
-const { verifyPassword } = require("../repository/crypt");
+import { getUserByEmail } from "../repository/queries";
+import { verifyPassword } from "../repository/crypt";
 
 // gRPC
-const { sessionServiceGrpcClient } = require("../config/grpc_config");
+import { sessionServiceGrpcClient } from "../config/grpc_config";
 
 // Utils
-const ApiError = require("../../utils/ApiError");
+import ApiError from "../../utils/ApiError";
 
+// Types
+import { Request, Response, NextFunction, Router } from "express";
+import { QueryResult } from "pg";
+
+
+// Create express router
+const router: Router = express.Router();
 
 router.post("/", [
 
@@ -26,13 +32,13 @@ router.post("/", [
   body("password")
     .isLength({ min: 1, max: 100 })
 
-], validationCheck, async (req, res, next) => {
+], validationCheck, async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     // Get validated request data
     const { email, password: submittedPassword } = req.matchedData;
 
     // Find user by email address
-    const result = await getUserByEmail(email);
+    const result: QueryResult<any> = await getUserByEmail(email);
 
     if (result.rowCount !== 1) {
       throw new ApiError(`No user found with email address: ${email}.`, HttpStatus.NOT_FOUND);
@@ -42,7 +48,7 @@ router.post("/", [
     const { id: userId, password: passwordHash, firstname: firstName, lastname: lastName, role } = result.rows[0];
 
     // Check if user submitted the correct password
-    const isPasswordCorrect = await verifyPassword(submittedPassword, passwordHash);
+    const isPasswordCorrect: boolean = await verifyPassword(submittedPassword, passwordHash);
 
     if (!isPasswordCorrect) {
       throw new ApiError("Incorrect password.", HttpStatus.UNAUTHORIZED);
@@ -72,5 +78,4 @@ router.post("/", [
   }
 });
 
-
-module.exports = router;
+export default router;

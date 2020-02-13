@@ -1,13 +1,18 @@
-const { createLogger, format, transports, config } = require("winston");
-const { combine, timestamp, prettyPrint, printf, colorize, errors, splat, json } = format;
+import { createLogger, format, transports } from "winston";
+
+// Types
+import { Logger } from "winston";
+
+
+// Destruct format functions to combine
+const { combine, timestamp, prettyPrint, printf, errors, splat, json } = format;
 
 // Custom Winston formatter for logging
 const customFormatter = printf(info => `${info.timestamp} ${info.level}: ${info.message}`);
 
-const logger = createLogger({
+const logger: Logger = createLogger({
   transports: [new transports.Console()],
   format: combine(
-    colorize(),
     timestamp(),
     customFormatter,
     errors({ stack: true }),
@@ -17,4 +22,4 @@ const logger = createLogger({
   )
 });
 
-module.exports = logger;
+export default logger;

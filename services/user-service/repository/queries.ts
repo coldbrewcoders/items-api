@@ -1,11 +1,14 @@
-const { postgresClient } = require("../config/postgres_config");
-const HttpStatus = require("http-status-codes");
+import { postgresClient } from "../config/postgres_config";
+import HttpStatus from "http-status-codes";
 
 // Utils
-const ApiError = require("../../utils/ApiError");
+import ApiError from "../../utils/ApiError";
+
+// Types
+import { QueryResult } from "pg";
 
 
-const addUser = async (email, safePasswordHash, firstName, lastName, role) => {
+const addUser = async (email: string, safePasswordHash: string, firstName: string, lastName: string, role: string): Promise<QueryResult<any>> => {
   try {
     // Create new user entry
     return await postgresClient.query("INSERT INTO UserService.Users (Email, Password, FirstName, LastName, Role) VALUES ($1, $2, $3, $4, $5);", [email, safePasswordHash, firstName, lastName, role]);
@@ -20,7 +23,7 @@ const addUser = async (email, safePasswordHash, firstName, lastName, role) => {
   }
 }
 
-const getUserByEmail = async (email) => {
+const getUserByEmail = async (email: string): Promise<QueryResult<any>> => {
   try {
     // Get user by email address
     return await postgresClient.query("SELECT * FROM UserService.Users WHERE Email = $1;", [email]);
@@ -30,7 +33,7 @@ const getUserByEmail = async (email) => {
   }
 }
 
-const getUserById = async (userId) => {
+const getUserById = async (userId: string): Promise<QueryResult<any>> => {
   try {
     // Get user by user id
     return await postgresClient.query("SELECT Id, Email, FirstName, LastName, Role, CreationDate FROM UserService.Users WHERE Id = $1;", [userId]);
@@ -40,7 +43,7 @@ const getUserById = async (userId) => {
   }
 }
 
-const modifyUserById = async (userId, email, firstName, lastName) => {
+const modifyUserById = async (userId: string, email: string, firstName: string, lastName: string): Promise<QueryResult<any>> => {
   try {
     return await postgresClient.query("UPDATE UserService.Users SET Email = $1, FirstName = $2, LastName = $3 WHERE Id = $4 RETURNING *;", [email, firstName, lastName, userId])
   }
@@ -54,7 +57,7 @@ const modifyUserById = async (userId, email, firstName, lastName) => {
   }
 }
 
-const deleteUserById = async (userId) => {
+const deleteUserById = async (userId: string): Promise<QueryResult<any>> => {
   try {
     return await postgresClient.query("DELETE FROM UserService.Users WHERE Id = $1 RETURNING *;", [userId]);
   }
@@ -63,8 +66,7 @@ const deleteUserById = async (userId) => {
   }
 }
 
-
-module.exports = {
+export {
   addUser,
   getUserByEmail,
   getUserById,

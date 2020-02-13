@@ -1,34 +1,40 @@
-const express = require("express");
-const router = express.Router();
-const { param, body } = require("express-validator");
-const HttpStatus = require("http-status-codes");
+import express from "express";
+import { param, body } from "express-validator";
+import HttpStatus from "http-status-codes";
 
 // Middleware
-const { isAuthenticatedAdmin, isAuthenticatedAdminOrSelf } = require("../middleware/authorization");
-const { validationCheck } = require("../middleware/validation");
+import { isAuthenticatedAdminOrSelf } from "../middleware/authorization";
+import { validationCheck } from "../middleware/validation";
 
 // Repository
-const { getUserById, modifyUserById, deleteUserById } = require("../repository/queries");
+import { getUserById, modifyUserById, deleteUserById } from "../repository/queries";
 
 // gRPC
-const { sessionServiceGrpcClient } = require("../config/grpc_config");
+import { sessionServiceGrpcClient } from "../config/grpc_config";
 
 // Utils
-const ApiError = require("../../utils/ApiError");
+import ApiError from "../../utils/ApiError";
 
+// Types
+import { Request, Response, NextFunction, Router } from "express";
+import { QueryResult } from "pg";
+
+
+// Create express router
+const router: Router = express.Router();
 
 router.get("/:userId", [
 
   param("userId")
     .isInt({ min: 1 })
 
-], validationCheck, isAuthenticatedAdminOrSelf, async (req, res, next) => {
+], validationCheck, isAuthenticatedAdminOrSelf, async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     // Get validated request data
     const { userId } = req.matchedData;
 
     // Get user info from user id
-    const result = await getUserById(userId);
+    const result: QueryResult<any> = await getUserById(userId);
 
     if (result.rowCount !== 1) {
       throw new ApiError("No user with this id exists.", HttpStatus.BAD_REQUEST);
@@ -67,12 +73,12 @@ router.put("/:userId",  [
   body("lastName")
     .isLength({ min: 1, max: 100 }),
 
-], validationCheck, isAuthenticatedAdminOrSelf, async (req, res, next) => {
+], validationCheck, isAuthenticatedAdminOrSelf, async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { userId, email, firstName, lastName } = req.matchedData;
 
     // Modify user values by user id
-    const result = await modifyUserById(userId, email, firstName, lastName);
+    const result: QueryResult<any> = await modifyUserById(userId, email, firstName, lastName);
 
     if (result.rowCount !== 1) {
       throw new ApiError("No user with this id exists.", HttpStatus.BAD_REQUEST);
@@ -118,13 +124,13 @@ router.delete("/:userId", [
   param("userId")
     .isInt({ min: 1 })
 
-], validationCheck, isAuthenticatedAdminOrSelf, async (req, res, next) => {
+], validationCheck, isAuthenticatedAdminOrSelf, async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     // Get validated request data
     const { userId } = req.matchedData;
 
     // Delete user by passed user id
-    const result = await deleteUserById(userId);
+    const result: QueryResult<any> = await deleteUserById(userId);
 
     if (result.rowCount !== 1) {
       throw new ApiError("No user with this id exists.", HttpStatus.BAD_REQUEST);
@@ -147,4 +153,4 @@ router.delete("/:userId", [
   }
 });
 
-module.exports = router;
+export default router;
