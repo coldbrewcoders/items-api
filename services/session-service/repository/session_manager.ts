@@ -14,7 +14,7 @@ const _getSessionKey = (userId: number): string => `${SESSION_KEY_PREFIX}:${user
 
 /*** Public module methods ***/
 
-const getSessionToken = async (userId: number): Promise<any> => {
+const getSessionToken = async (userId: number): Promise<string> => {
   try {
     // Use key to get the session token from Redis
     return await redisClient.getAsync(_getSessionKey(userId));
@@ -24,7 +24,7 @@ const getSessionToken = async (userId: number): Promise<any> => {
   }
 }
 
-const setSessionToken = async (userId: number, token: string): Promise<any> => {
+const setSessionToken = async (userId: number, token: string): Promise<string> => {
   try {
     // Add key and session token key/value pair to Redis (expires in 30 minutes)
     return await redisClient.setAsync(_getSessionKey(userId), token, "EX", 1800);
@@ -34,7 +34,7 @@ const setSessionToken = async (userId: number, token: string): Promise<any> => {
   }
 }
 
-const removeSessionToken = async (userId: number): Promise<any> => {
+const removeSessionToken = async (userId: number): Promise<number> => {
   try {
     // Remove session from redis
     return await redisClient.delAsync(_getSessionKey(userId));

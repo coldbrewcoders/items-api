@@ -72,9 +72,9 @@ const replaceSession = async (call: any, callback: Function): Promise<void> => {
   const { userId, email, firstName, lastName, role } = call.request;
 
   // Remove existing session token from Redis (if exists)
-  const result: Boolean = await removeSessionToken(userId);
+  const result: number = await removeSessionToken(userId);
 
-  if (result === false) {
+  if (!(result == 0 || result == 1)) {
     callback("Error removing session token from Redis", { sessionToken: "" });
   }
   else {
