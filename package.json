@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "build": "tsc",
-    "start-session-service": "nodemon ./services/session-service/main.js",
-    "start-items-service": "nodemon ./services/items-service/main.js",
-    "start-user-service": "nodemon ./services/user-service/main.ts"
+    "session-service": "nodemon ./dist/session-service/main.js",
+    "items-service": "nodemon ./dist/items-service/main.js",
+    "user-service": "nodemon ./dist/user-service/main.ts"
   },
   "dependencies": {
     "@grpc/proto-loader": "0.5.3",
@@ -42,6 +42,8 @@
     "@types/pg": "7.14.1",
     "@types/redis": "2.8.15",
     "@types/winston": "2.4.4",
+    "cpy-cli": "3.0.0",
+    "del-cli": "3.0.0",
     "nodemon": "2.0.2"
   },
   "license": "ISC"

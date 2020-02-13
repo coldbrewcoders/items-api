@@ -10,6 +10,7 @@ import compression from "compression";
 // Utils
 import notFoundHandler from "../utils/notFoundHandler";
 import genericErrorHandler from "../utils/genericErrorHandler";
+import logger from "../utils/Logger";
 
 // Types
 import { Application } from "express";
@@ -47,4 +48,4 @@ app.use(genericErrorHandler);
 const server: Server = createServer(app);
 
 // Start API server
-server.listen(process.env.ITEMS_SERVICE_API_PORT, () => console.log(`Items Service REST API server listening on port ${process.env.ITEMS_SERVICE_API_PORT}`));
+server.listen(process.env.ITEMS_SERVICE_API_PORT, () => logger.info(`Items Service REST API server listening on port ${process.env.ITEMS_SERVICE_API_PORT}`));
