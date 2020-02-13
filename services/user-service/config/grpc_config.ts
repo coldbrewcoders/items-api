@@ -1,5 +1,5 @@
 import grpc from "grpc";
-import protoLoader from "@grpc/proto-loader";
+const protoLoader = require("@grpc/proto-loader");
 import grpcPromise from "grpc-promise";
 import path from "path";
 
