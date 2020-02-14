@@ -5,12 +5,13 @@ import ApiError from "./ApiError";
 import logger from "./Logger";
 
 // Types
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 
 
-const genericErrorHandler = (error: ApiError, _req: Request, res: Response) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+const genericErrorHandler = (error: ApiError, _req: Request, res: Response, _next: NextFunction): void => {
   // Log the error being thrown
-  logger.error(`ERROR: ${error}`);
+  logger.error(`ERROR: ${error.message}`);
 
   // Set response error status with error JSON
   res.status(error.code || INTERNAL_SERVER_ERROR).json(error);
