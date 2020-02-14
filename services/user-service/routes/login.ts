@@ -20,6 +20,15 @@ import { Request, Response, NextFunction, Router } from "express";
 import { QueryResult } from "pg";
 
 
+interface ILoginResponse {
+  sessionToken: string;
+  userId: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+}
+
 // Create express router
 const router: Router = express.Router();
 
@@ -58,14 +67,17 @@ router.post("/", [
       // Create session for authenticated user with gRPC call to session service
       const { sessionToken } = await sessionServiceGrpcClient.createSession().sendMessage({ userId, email, firstName, lastName, role });
 
-      res.json({
+      // Create response payload
+      const response: ILoginResponse = {
         sessionToken,
         userId,
         email,
         firstName,
         lastName,
         role
-      });
+      };
+
+      res.json(response);
     }
     catch (error) {
       // Handle error from gRPC call
