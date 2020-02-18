@@ -9,7 +9,7 @@ interface ISessionValues {
   email: string;
   firstName: string;
   lastName: string;
-  role: Role;
+  role: string;
 }
 
 declare namespace Express {

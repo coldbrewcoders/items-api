@@ -66,7 +66,7 @@ const createItem = async (name: string, description: string, userId: string): Pr
   }
 }
 
-const updateItemById = async (itemId: string, name: string, description: string, userId: string, role: Role): Promise<QueryResult<any>> => {
+const updateItemById = async (itemId: string, name: string, description: string, userId: string, role: string): Promise<QueryResult<any>> => {
   try {
     // Update existing item's name or description (user must be an admin or own this item)
     return await postgresClient.query(
@@ -84,7 +84,7 @@ const updateItemById = async (itemId: string, name: string, description: string,
   }
 }
 
-const deleteItemById = async (itemId: string, userId: string, role: Role): Promise<QueryResult<any>> => {
+const deleteItemById = async (itemId: string, userId: string, role: string): Promise<QueryResult<any>> => {
   try {
     // Delete item entry (user must be an admin or own this item)
     return await postgresClient.query(

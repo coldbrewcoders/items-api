@@ -8,7 +8,7 @@ import ApiError from "../../utils/ApiError";
 import { QueryResult } from "pg";
 
 
-const addUser = async (email: string, safePasswordHash: string, firstName: string, lastName: string, role: Role): Promise<QueryResult<any>> => {
+const addUser = async (email: string, safePasswordHash: string, firstName: string, lastName: string, role: string): Promise<QueryResult<any>> => {
   try {
     // Create new user entry
     return await postgresClient.query(
