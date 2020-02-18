@@ -2,12 +2,15 @@
   "name": "items-api",
   "version": "1.0.0",
   "scripts": {
-    "prebuild": "del dist/",
+    "prebuild": "del dist/ && cpy '**/*.key' ../dist --cwd=services/ --no-overwrite --parents",
     "build": "tsc",
-    "postbuild": "cpy '**/*.key' ../dist --cwd=services/ --no-overwrite --parents",
+    "watch": "npm run prebuild && tsc -w",
     "session-service": "nodemon ./dist/session-service/main.js",
     "items-service": "nodemon ./dist/items-service/main.js",
     "user-service": "nodemon ./dist/user-service/main.js"
+  },
+  "nodemonConfig": {
+    "delay": "2500"
   },
   "dependencies": {
     "@grpc/proto-loader": "0.5.3",
