@@ -28,7 +28,7 @@ const verifyOptions: VerifyOptions = {
 };
 
 
-const signJwt = (userId: number, email: string, firstName: string, lastName: string, role: string): string => {
+const signJwt = (userId: number, email: string, firstName: string, lastName: string, role: Role): string => {
 
   // Define session data present in token
   const payload: ISessionValues = {

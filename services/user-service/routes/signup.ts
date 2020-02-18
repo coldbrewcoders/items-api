@@ -35,7 +35,7 @@ router.post("/", [
     .isLength({ min: 1, max: 100 }),
 
   body("role")
-    .isIn(["BASIC", "ADMIN"])
+    .isIn([Role.BASIC, Role.ADMIN])
 
 ], validationCheck, async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {

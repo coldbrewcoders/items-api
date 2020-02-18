@@ -43,10 +43,10 @@ const verifySessionToken = async (req: Request, _res: Response, next: NextFuncti
 
 const isAuthenticatedMiddleware = (req: Request, _res: Response, next: NextFunction): void => {
   // Check session values for current role
-  const role: string = req?.sessionValues?.role;
+  const role: Role = req?.sessionValues?.role;
 
   // Check if user is authenticated based on role
-  if (role !== "BASIC" && role !== "ADMIN") {
+  if (role !== Role.BASIC && role !== Role.ADMIN) {
     throw new ApiError("User does not have valid permission role", HttpStatus.UNAUTHORIZED);
   }
 
@@ -55,10 +55,10 @@ const isAuthenticatedMiddleware = (req: Request, _res: Response, next: NextFunct
 
 const isAuthenticatedAdminMiddleware = (req: Request, _res: Response, next: NextFunction): void => {
   // Check session values for current role
-  const role: string = req?.sessionValues?.role;
+  const role: Role = req?.sessionValues?.role;
 
   // Check if authenticated user is an admin
-  if (role !== "ADMIN") {
+  if (role !== Role.ADMIN) {
     throw new ApiError("User does not have an admin role", HttpStatus.FORBIDDEN);
   }
 
