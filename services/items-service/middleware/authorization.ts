@@ -46,7 +46,7 @@ const isAuthenticatedMiddleware = (req: Request, _res: Response, next: NextFunct
   const role: string = req?.sessionValues?.role;
 
   // Check if user is authenticated based on role
-  if (role !== "BASIC" && role !== "ADMIN") {
+  if (role !== Role.BASIC && role !== Role.ADMIN) {
     throw new ApiError("User does not have valid permission role", HttpStatus.UNAUTHORIZED);
   }
 
@@ -58,7 +58,7 @@ const isAuthenticatedAdminMiddleware = (req: Request, _res: Response, next: Next
   const role: string = req?.sessionValues?.role;
 
   // Check if authenticated user is an admin
-  if (role !== "ADMIN") {
+  if (role !== Role.ADMIN) {
     throw new ApiError("User does not have an admin role", HttpStatus.FORBIDDEN);
   }
 

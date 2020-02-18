@@ -20,7 +20,7 @@ const router: Router = express.Router();
 router.get("/", isAuthenticated, async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     // Get user id from session values
-    const { userId } = req.sessionValues;
+    const userId: number = req?.sessionValues?.userId;
 
     try {
       // gRPC call to session service to remove session token

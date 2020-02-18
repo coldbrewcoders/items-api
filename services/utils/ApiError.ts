@@ -7,7 +7,7 @@ class ApiError extends CustomError {
   code: number;
   date: Date;
 
-  constructor (message: string | Object, httpStatusCode: number = HttpStatus.INTERNAL_SERVER_ERROR) {
+  constructor (message: string | Record<string, any>, httpStatusCode: number = HttpStatus.INTERNAL_SERVER_ERROR) {
 
     let serializedMessage: string;
 
@@ -20,7 +20,7 @@ class ApiError extends CustomError {
     }
 
     // Call constructor of base Error class
-    super(serializedMessage);
+    super();
 
     // Maintains proper stack trace for where our error was thrown (only available on V8)
     if (Error.captureStackTrace) {

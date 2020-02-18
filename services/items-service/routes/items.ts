@@ -169,7 +169,8 @@ router.put("/:itemId", [
     const { itemId, name, description } = req.matchedData;
 
     // Get currently authed user and role
-    const { userId, role } = req.sessionValues;
+    const userId: number = req?.sessionValues?.userId;
+    const role: string = req?.sessionValues?.role;
 
     // Update item name or description (user must be an admin or own this item)
     const result: QueryResult<any> = await updateItemById(itemId, name, description, String(userId), role);
@@ -198,7 +199,8 @@ router.delete("/:itemId", [
     const itemId: string = req?.matchedData?.itemId;
 
     // Get currently authed user and role
-    const { userId, role } = req.sessionValues;
+    const userId: number = req?.sessionValues?.userId;
+    const role: string = req?.sessionValues?.role;
 
     // Delete item (user must be an admin or own this item)
     const result: QueryResult<any> = await deleteItemById(itemId, String(userId), role);

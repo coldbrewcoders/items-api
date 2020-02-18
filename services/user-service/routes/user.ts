@@ -20,6 +20,16 @@ import { Request, Response, NextFunction, Router } from "express";
 import { QueryResult } from "pg";
 
 
+interface IUserResponse {
+  id: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+  creationDate: string;
+  sessionToken?: string;
+}
+
 // Create express router
 const router: Router = express.Router();
 
@@ -43,14 +53,17 @@ router.get("/:userId", [
     // Get values returned from query
     const { id, email, firstname: firstName, lastname: lastName, role, creationdate: creationDate } = result.rows[0];
 
-    res.json({
+    // Create response payload
+    const response: IUserResponse = {
       id,
       email,
       firstName,
       lastName,
       role,
       creationDate
-    });
+    };
+
+    res.json(response);
   }
   catch (error) {
     // Go to the error handling middleware with the error
@@ -83,34 +96,48 @@ router.put("/:userId", [
     if (result.rowCount !== 1) {
       throw new ApiError("No user with this id exists.", HttpStatus.BAD_REQUEST);
     }
-
-    // Check if user is making request on own behalf
-    if (req.sessionValues.userId === Number(userId)) {
+    else {
       // Get values returned from query
-      const { email, firstname: firstName, lastname: lastName, role } = result.rows[0];
+      const { id, email, firstname: firstName, lastname: lastName, role, creationdate: creationDate } = result.rows[0];
 
-      try {
-        // Make gRPC call to session service to replace old session with updated session
-        const { sessionToken } = sessionServiceGrpcClient.replaceSession().sendMessage({ userId, email, firstName, lastName, role });
+      // Check if user is making request on own behalf
+      if (req.sessionValues.userId === Number(userId)) {
+        try {
+          // Make gRPC call to session service to replace old session with updated session
+          const { sessionToken } = sessionServiceGrpcClient.replaceSession().sendMessage({ userId, email, firstName, lastName, role });
 
-        // Return updated user values with new session token
-        res.json({
-          sessionToken,
-          id: userId,
+          // Build response payload
+          const response: IUserResponse = {
+            id,
+            email,
+            firstName,
+            lastName,
+            role,
+            creationDate,
+            sessionToken
+          };
+
+          // Return updated user values with new session token
+          res.json(response);
+        }
+        catch (error) {
+          // Handle error from gRPC call
+          throw new ApiError("An internal server error occurred.", HttpStatus.UNAUTHORIZED);
+        }
+      }
+      else {
+        // Build response payload (no session token included)
+        const response: IUserResponse = {
+          id,
           email,
           firstName,
           lastName,
-          role
-        });
+          role,
+          creationDate
+        };
+
+        res.json(response);
       }
-      catch (error) {
-        // Handle error from gRPC call
-        throw new ApiError("An internal server error occurred.", HttpStatus.UNAUTHORIZED);
-      }
-    }
-    else {
-      // User was admin making request on another user's behalf
-      res.sendStatus(200);
     }
   }
   catch (error) {
