@@ -1,21 +1,22 @@
 declare module "grpc-promise";
 
 interface IMatchedData {
-  [key: string]: string
+  [key: string]: string;
 }
 
 interface ISessionValues {
-  userId: number,
-  email: string,
-  firstName: string,
-  lastName: string,
-  role: string,
+  userId: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: Role;
 }
 
 declare namespace Express {
+  // eslint-disable-next-line @typescript-eslint/interface-name-prefix
   export interface Request {
-    matchedData?: IMatchedData,
-    sessionValues?: ISessionValues,
+    matchedData?: IMatchedData;
+    sessionValues?: ISessionValues;
   }
 }
 
