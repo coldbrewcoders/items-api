@@ -14,6 +14,7 @@ import ApiError from "../../utils/ApiError";
 
 // Types
 import { Request, Response, NextFunction, Router } from "express";
+import { Role } from "../../utils/Enums";
 
 
 // Create express router

@@ -8,6 +8,7 @@ import ApiError from "../../utils/ApiError";
 
 // Types
 import { Request, Response, NextFunction } from "express";
+import { Role } from "../../utils/Enums";
 
 
 const verifySessionToken = async (req: Request, _res: Response, next: NextFunction): Promise<void> => {

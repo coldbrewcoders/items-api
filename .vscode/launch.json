@@ -8,7 +8,7 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}/services/user-service/main.js"
+      "program": "${workspaceFolder}/dist/user-service/main.js"
     },
     {
       "type": "node",
@@ -17,7 +17,7 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}/services/session-service/main.js"
+      "program": "${workspaceFolder}/dist/session-service/main.js"
     },
     {
       "type": "node",
@@ -26,7 +26,7 @@
       "skipFiles": [
         "<node_internals>/**"
       ],
-      "program": "${workspaceFolder}/services/items-service/main.js"
+      "program": "${workspaceFolder}/dist/items-service/main.js"
     }
   ]
 }

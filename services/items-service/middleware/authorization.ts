@@ -3,11 +3,12 @@ import HttpStatus from "http-status-codes";
 // gRPC
 import { sessionServiceGrpcClient } from "../config/grpc_config";
 
-// Types
-import { Request, Response, NextFunction } from "express";
-
 // Utils
 import ApiError from "../../utils/ApiError";
+
+// Types
+import { Request, Response, NextFunction } from "express";
+import { Role } from "../../utils/Enums";
 
 
 const verifySessionToken = async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
