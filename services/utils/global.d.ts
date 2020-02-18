@@ -19,8 +19,3 @@ declare namespace Express {
     sessionValues?: ISessionValues;
   }
 }
-
-declare enum Role {
-  ADMIN = "ADMIN",
-  BASIC = "BASIC"
-}
