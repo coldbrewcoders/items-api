@@ -1,7 +1,7 @@
 import { redisClient } from "../config/redis_config";
 
-// Utils
-import logger from "../../utils/Logger";
+// Config
+import logger from "../config/logger_config";
 
 
 const SESSION_KEY_PREFIX: string = "USER_SESSION";

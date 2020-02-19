@@ -2,8 +2,8 @@ import fs from "fs";
 import path from "path";
 import jwt from "jsonwebtoken";
 
-// Utils
-import logger from "../../utils/Logger";
+// Config
+import logger from "../config/logger_config";
 
 // Types
 import { Secret, VerifyOptions, SignOptions } from "jsonwebtoken";
