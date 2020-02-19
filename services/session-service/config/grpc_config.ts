@@ -2,8 +2,8 @@ import grpc from "grpc";
 import { loadSync } from "@grpc/proto-loader";
 import path from "path";
 
-// Utils
-import logger from "../../utils/Logger";
+// Config
+import logger from "./logger_config";
 
 // Types
 import { Server } from "grpc";

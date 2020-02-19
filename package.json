@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@grpc/proto-loader": "0.5.3",
+    "amqplib": "0.5.5",
     "bcrypt": "3.0.8",
     "bluebird": "3.7.2",
     "body-parser": "1.19.0",
@@ -28,6 +29,9 @@
     "jsonwebtoken": "8.5.1",
     "lodash": "4.17.15",
     "morgan": "1.9.1",
+    "node-handlebars": "0.9.7",
+    "nodemailer": "6.4.2",
+    "nodemailer-mailgun-transport": "2.0.0",
     "pg": "7.18.1",
     "redis": "3.0.2",
     "ts-custom-error": "3.1.1",
@@ -36,6 +40,7 @@
     "winston": "3.2.1"
   },
   "devDependencies": {
+    "@types/amqplib": "0.5.13",
     "@types/bcrypt": "3.0.0",
     "@types/bluebird": "3.5.29",
     "@types/compression": "1.7.0",
@@ -44,6 +49,8 @@
     "@types/jsonwebtoken": "8.3.7",
     "@types/morgan": "1.7.37",
     "@types/node": "13.7.2",
+    "@types/nodemailer": "6.4.0",
+    "@types/nodemailer-mailgun-transport": "1.4.1",
     "@types/pg": "7.14.1",
     "@types/redis": "2.8.16",
     "@types/winston": "2.4.4",

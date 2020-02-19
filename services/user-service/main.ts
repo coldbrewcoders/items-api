@@ -9,12 +9,14 @@ import compression from "compression";
 
 // Utils
 import notFoundHandler from "../utils/notFoundHandler";
-import genericErrorHandler from "../utils/genericErrorHandler";
-import logger from "../utils/Logger";
+import GenericErrorHandlerFactory from "../utils/GenericErrorHandlerFactory";
 
 // Types
 import { Application } from "express";
 import { Server } from "http";
+
+// Init logger for service
+import logger from "./config/logger_config";
 
 // Init connection to postgreSQL DB
 import "./config/postgres_config";
@@ -48,10 +50,10 @@ app.use("/api/user", userApi);
 app.use("*", notFoundHandler);
 
 // Generic error handler middleware
-app.use(genericErrorHandler);
+app.use(GenericErrorHandlerFactory(logger));
 
 // Initialize REST API server
 const server: Server = createServer(app);
 
 // Start API server
-server.listen(process.env.USER_SERVICE_API_PORT, () => logger.info(`User Service REST API server listening on port ${process.env.USER_SERVICE_API_PORT}`));
+server.listen(process.env.USER_SERVICE_API_PORT, () => logger.info(`REST API server listening on port ${process.env.USER_SERVICE_API_PORT}`));

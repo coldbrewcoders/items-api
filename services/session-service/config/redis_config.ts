@@ -2,8 +2,8 @@
 import redis from "redis";
 import bluebird from "bluebird";
 
-// Utils
-import logger from "../../utils/Logger";
+// Config
+import logger from "./logger_config";
 
 // Types
 import { RedisClient } from "redis";

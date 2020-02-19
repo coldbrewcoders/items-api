@@ -1,7 +1,7 @@
 import { Pool } from "pg";
 
-// Utils
-import logger from "../../utils/Logger";
+// Config
+import logger from "./logger_config";
 
 
 // Connect to PostgreSQL DB
