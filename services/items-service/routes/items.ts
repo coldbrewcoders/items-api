@@ -2,6 +2,9 @@ import express from "express";
 import { param, body } from "express-validator";
 import HttpStatus from "http-status-codes";
 
+// Config
+import { sendNotificationToQueue } from "../config/rabbitmq_config";
+
 // Middleware
 import { isAuthenticated, isAuthenticatedAdmin } from "../middleware/authorization";
 import { validationCheck } from "../middleware/validation";
@@ -23,6 +26,7 @@ import ApiError from "../../utils/ApiError";
 // Types
 import { Request, Response, NextFunction, Router } from "express";
 import { QueryResult } from "pg";
+import { NotificationTypes } from "../../utils/Enums";
 
 
 // Create express router
@@ -143,6 +147,18 @@ router.post("/", [
 
     // Create a new item for this user
     const result: QueryResult<any> = await createItem(name, description, userId);
+
+    // Get session values for notification
+    const { firstName, email } = req.sessionValues;
+
+    // Send item created notification to queue
+    await sendNotificationToQueue({
+      notificationType: NotificationTypes.ItemCreated,
+      name,
+      description,
+      firstName,
+      email
+    });
 
     res.json(result.rows[0]);
   }

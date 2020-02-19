@@ -4,4 +4,10 @@ enum Role {
   BASIC = "BASIC"
 }
 
-export { Role };
+enum NotificationTypes {
+  ItemCreated = "ItemCreated",
+  ItemModified = "ItemModified",
+  ItemDeleted = "ItemDeleted"
+}
+
+export { Role, NotificationTypes };
