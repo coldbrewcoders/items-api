@@ -26,7 +26,6 @@ import ApiError from "../../utils/ApiError";
 // Types
 import { Request, Response, NextFunction, Router } from "express";
 import { QueryResult } from "pg";
-import { NotificationTypes } from "../../utils/Enums";
 
 
 // Create express router
@@ -151,14 +150,17 @@ router.post("/", [
     // Get session values for notification
     const { firstName, email } = req.sessionValues;
 
-    // Send item created notification to queue
-    await sendNotificationToQueue({
-      notificationType: NotificationTypes.ItemCreated,
-      name,
-      description,
+    // Create the content of the email notification
+    const emailNotification: IEmailNotification = {
+      email,
       firstName,
-      email
-    });
+      subject: "You have created a new item!",
+      messageHeader: `You just created an item named ${name}`,
+      messageBody: `The description for ${name} is: ${description}.`
+    };
+
+    // Send item created notification to queue
+    await sendNotificationToQueue(emailNotification);
 
     res.json(result.rows[0]);
   }

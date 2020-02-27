@@ -12,6 +12,14 @@ interface ISessionValues {
   role: string;
 }
 
+interface IEmailNotification {
+  email: string;
+  firstName: string;
+  subject: string;
+  messageHeader: string;
+  messageBody: string;
+}
+
 declare namespace Express {
   // eslint-disable-next-line @typescript-eslint/interface-name-prefix
   export interface Request {

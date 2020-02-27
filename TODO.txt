@@ -1,9 +1,27 @@
-TO DO - DRINK MORE COFFEE!!
+
+To Do:
 
 [] Add https://github.com/inxilpro/node-app-root-path to make imports cleaner and easier to manage
-[] Add a config file that exports all of the env variables in an organized way for use
-[] Refactor the repository to be Typescript based instead of JS
 [] Investigate wether https://www.npmjs.com/package/lusca is worth using or not. It's in the TS boilerplate repository
 [] Explore https://github.com/expressjs/errorhandler#readme as error handling middleware over the custom 'genericErrorHandler` one
-[] Build out session service API routes
-[] Add RabbitMQ and Notification Service
+
+
+Useful Tools:
+
+Running and viewing Redis:
+> redis-server   // Starts Redis instance on local machine
+> redis-commander   // Starts a web-based GUI at 'http://127.0.0.1:8081'
+
+Running and viewing RabbitMQ:
+> rabbitmq-server   // Start RabbitMQ instance (aka cluster and node) on local machine
+> rabbitmq-plugins enable rabbitmq_management   // Enables management plugin that starts a web-based GUI at http://localhost:15672/
+
+Note:
+  Default Cluster name: rabbit@{host-name}
+  Default Node name: rabbit@localhost
+
+> hostname -s   // Show computer's host-name
+
+> rabbitmqctl stop -n rabbit@localhost    // Stops node
+> rabbitmqctl start -n rabbit@localhost   // Starts node  (default node created is 'rabbit@localhost')
+> rabbitmqctl cluster_status   // View status of cluster including the types, names and status of nodes inside
