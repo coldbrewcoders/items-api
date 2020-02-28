@@ -38,7 +38,7 @@ const verifySessionToken = async (req: Request, _res: Response, next: NextFuncti
     next();
   }
   catch (error) {
-    throw new ApiError("Error validating session token", HttpStatus.UNAUTHORIZED);
+    next(new ApiError("Unable to find or validate session token", HttpStatus.UNAUTHORIZED));
   }
 }
 
@@ -48,7 +48,7 @@ const isAuthenticatedMiddleware = (req: Request, _res: Response, next: NextFunct
 
   // Check if user is authenticated based on role
   if (role !== Role.BASIC && role !== Role.ADMIN) {
-    throw new ApiError("User does not have valid permission role", HttpStatus.UNAUTHORIZED);
+    next (new ApiError("User does not have valid permission role", HttpStatus.UNAUTHORIZED));
   }
 
   next();
@@ -60,12 +60,11 @@ const isAuthenticatedAdminMiddleware = (req: Request, _res: Response, next: Next
 
   // Check if authenticated user is an admin
   if (role !== Role.ADMIN) {
-    throw new ApiError("User does not have an admin role", HttpStatus.FORBIDDEN);
+    next(new ApiError("User does not have an admin role", HttpStatus.FORBIDDEN));
   }
 
   next();
 }
-
 
 // Bundle middleware functions
 const isAuthenticated = [verifySessionToken, isAuthenticatedMiddleware];
