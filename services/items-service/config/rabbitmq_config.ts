@@ -5,16 +5,7 @@ import logger from "./logger_config";
 
 // Types
 import { Connection, Channel } from "amqplib";
-import { NotificationTypes } from "../../utils/Enums";
 
-
-interface INotificationMessage {
-  notificationType: NotificationTypes;
-  name: string;
-  description: string;
-  firstName: string;
-  email: string;
-}
 
 // Keep open channel in module variable
 let channel: Channel = null;
@@ -28,7 +19,7 @@ const createRabbitMqConnection = async (): Promise<void> => {
     channel = await connection.createChannel();
 
     // Create notifications channel if it does not exist
-    await channel.assertQueue(process.env.NOTIFICATIONS_QUEUE_NAME);
+    await channel.assertQueue(process.env.NOTIFICATIONS_QUEUE_NAME, { durable: true });
 
     logger.info(`RabbitMQ connection to ${process.env.NOTIFICATIONS_QUEUE_NAME} channel established`);
   }
@@ -41,16 +32,16 @@ const createRabbitMqConnection = async (): Promise<void> => {
 createRabbitMqConnection();
 
 
-const sendNotificationToQueue = async (message: INotificationMessage): Promise<void> => {
+const sendNotificationToQueue = async (message: IEmailNotification): Promise<void> => {
   try {
     // Short circuit if channel has not been set
     if (channel === null) return;
 
     // Create notifications channel if it does not exist
-    await channel.assertQueue(process.env.NOTIFICATIONS_QUEUE_NAME);
+    await channel.assertQueue(process.env.NOTIFICATIONS_QUEUE_NAME, { durable: true });
 
     // Send notification message to queue
-    channel.sendToQueue(process.env.NOTIFICATIONS_QUEUE_NAME, Buffer.from(JSON.stringify(message)));
+    channel.sendToQueue(process.env.NOTIFICATIONS_QUEUE_NAME, Buffer.from(JSON.stringify(message)), { persistent: true });
   }
   catch (error) {
     logger.error(error);

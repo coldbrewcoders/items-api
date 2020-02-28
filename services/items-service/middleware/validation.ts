@@ -16,7 +16,7 @@ const validationCheck = (req: Request, _res: Response, next: NextFunction): void
 
   if (!validationErrors.isEmpty()) {
     // If there are validation errors, return 400 status
-    throw new ApiError({ error: validationErrors.mapped() }, HttpStatus.BAD_REQUEST);
+    next(new ApiError({ error: validationErrors.mapped() }, HttpStatus.BAD_REQUEST));
   }
 
   // If there are no validation errors, proceed

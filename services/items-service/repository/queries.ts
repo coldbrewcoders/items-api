@@ -21,7 +21,7 @@ const getAllItems = async (): Promise<QueryResult<any>> => {
 const getItemsCreatedByUser = async (userId: string): Promise<QueryResult<any>> => {
   try {
     // Return all items created by a specific user
-    return await postgresClient.query("SELECT * FROM ItemsService.Items WHERE CreatedByUserId =: string $1;", [userId]);
+    return await postgresClient.query("SELECT * FROM ItemsService.Items WHERE CreatedByUserId = $1;", [userId]);
   }
   catch (error) {
     throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);

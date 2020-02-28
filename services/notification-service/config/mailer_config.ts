@@ -25,7 +25,7 @@ const template: HandlebarsTemplateDelegate<any> = Handlebars.compile(source.toSt
 const mailgunClient: Mailgun = mailgun({ apiKey: process.env.MAILGUN_API_KEY, domain: process.env.MAILGUN_DOMAIN });
 
 
-const sendEmailNotification = async (userEmail: string, subject: string, firstName: string, messageHeader: string, messageBody: string): Promise<void> => {
+const sendEmailNotification = async ({ email, subject, firstName, messageHeader, messageBody }: IEmailNotification): Promise<void> => {
   try {
     // Render handlebars html template
     const html = template({
@@ -37,7 +37,7 @@ const sendEmailNotification = async (userEmail: string, subject: string, firstNa
     // Set email options and content
     const mailOptions: SendMailOptions = {
       from: `notifications@${process.env.ROOT_EMAIL_DOMAIN}`,
-      to: userEmail,
+      to: email,
       subject,
       html
     };
@@ -50,7 +50,7 @@ const sendEmailNotification = async (userEmail: string, subject: string, firstNa
 
     // Create mailgun email payload
     const dataToSend = {
-      to: userEmail,
+      to: email,
       message: message.toString('ascii')
     };
 
