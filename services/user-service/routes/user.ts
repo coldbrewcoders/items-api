@@ -84,7 +84,7 @@ router.put("/:userId", [
     .isLength({ min: 1, max: 100 }),
 
   body("lastName")
-    .isLength({ min: 1, max: 100 }),
+    .isLength({ min: 1, max: 100 })
 
 ], validationCheck, isAuthenticatedAdminOrSelf, async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {

@@ -1,1 +1,0 @@
-// TODO: Create method that sorts notification types and triggers appropriate email

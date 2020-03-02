@@ -26,7 +26,6 @@ import ApiError from "../../utils/ApiError";
 // Types
 import { Request, Response, NextFunction, Router } from "express";
 import { QueryResult } from "pg";
-import { NotificationTypes } from "../../utils/Enums";
 
 
 // Create express router
@@ -151,14 +150,17 @@ router.post("/", [
     // Get session values for notification
     const { firstName, email } = req.sessionValues;
 
-    // Send item created notification to queue
-    await sendNotificationToQueue({
-      notificationType: NotificationTypes.ItemCreated,
-      name,
-      description,
+    // Create the content of the email notification
+    const emailNotification: IEmailNotification = {
+      email,
       firstName,
-      email
-    });
+      subject: "You have created a new item!",
+      messageHeader: `You just created an item named ${name}`,
+      messageBody: `The description for ${name} is: ${description}.`
+    };
+
+    // Send item created notification to queue
+    await sendNotificationToQueue(emailNotification);
 
     res.json(result.rows[0]);
   }
@@ -196,6 +198,30 @@ router.put("/:itemId", [
       throw new ApiError(`User does not have permission to modify item: ${itemId}`, HttpStatus.FORBIDDEN);
     }
 
+    const email: string = req?.sessionValues?.email;
+    const firstName: string = req?.sessionValues?.firstName;
+
+    // Create the content of the email notification
+    const emailNotification: IEmailNotification = {
+      email,
+      firstName,
+      subject: "You have modified a new item!",
+      messageHeader: `You just modified an item, now named ${name}`,
+      messageBody: `The description for ${name} is: ${description}.`
+    };
+
+    // Send user an email saying that they've modified an item
+    await sendNotificationToQueue(emailNotification);
+
+    // Get user id of who the item was created by
+    // const { createdbyuserId: createdByUserId } = result.rows[0];
+
+    // if (userId !== createdByUserId) {
+      // User modified an item created by a different user, send owner of item an email
+      // TODO: Make gRPC call to user-service to get email address for user
+      // TODO: Send email to this user to notify them that their item has been modified
+    // }
+
     res.json(result.rows[0]);
   }
   catch (error) {
@@ -225,6 +251,32 @@ router.delete("/:itemId", [
     if (result.rowCount !== 1) {
       throw new ApiError(`User does not have permission to delete item: ${itemId}`, HttpStatus.FORBIDDEN);
     }
+
+    const { name, description } = result.rows[0];
+
+    const email: string = req?.sessionValues?.email;
+    const firstName: string = req?.sessionValues?.firstName;
+
+    // Create the content of the email notification
+    const emailNotification: IEmailNotification = {
+      email,
+      firstName,
+      subject: "You have deleted an item!",
+      messageHeader: `You just deleted an item named ${name}`,
+      messageBody: `The description for ${name} was: ${description}.`
+    };
+
+    // Send user an email saying that they've deleted an item
+    await sendNotificationToQueue(emailNotification);
+
+    // Get user id of who the item was created by
+    // const { createdbyuserId: createdByUserId } = result.rows[0];
+
+    // if (userId !== createdByUserId) {
+      // User deleted an item created by a different user, send owner of item an email
+      // TODO: Make gRPC call to user-service to get email address for user
+      // TODO: Send email to this user to notify them that their item has been modified
+    // }
 
     res.sendStatus(200);
   }
