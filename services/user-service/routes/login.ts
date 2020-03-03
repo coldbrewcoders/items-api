@@ -54,7 +54,7 @@ router.post("/", [
     }
 
     // Get values returned by query
-    const { id: userId, password: passwordHash, firstname: firstName, lastname: lastName, role } = result.rows[0];
+    const { id: userId, password: passwordHash, first_name: firstName, first_name: lastName, role } = result.rows[0];
 
     // Check if user submitted the correct password
     const isPasswordCorrect: boolean = await verifyPassword(submittedPassword, passwordHash);

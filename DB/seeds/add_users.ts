@@ -14,7 +14,7 @@ export const createUser = (): IUser => ({
   first_name: faker.name.firstName(),
   last_name: faker.name.lastName(),
   password: faker.internet.password()
-})
+});
 
 export const seed = async (knex: Knex): Promise<void> => {
 

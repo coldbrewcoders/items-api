@@ -214,7 +214,7 @@ router.put("/:itemId", [
     await sendNotificationToQueue(emailNotification);
 
     // Get user id of who the item was created by
-    // const { createdbyuserId: createdByUserId } = result.rows[0];
+    // const { created_by_user_id: createdByUserId } = result.rows[0];
 
     // if (userId !== createdByUserId) {
       // User modified an item created by a different user, send owner of item an email

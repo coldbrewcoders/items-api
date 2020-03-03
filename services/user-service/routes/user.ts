@@ -51,7 +51,7 @@ router.get("/:userId", [
     }
 
     // Get values returned from query
-    const { id, email, firstname: firstName, lastname: lastName, role, creationdate: creationDate } = result.rows[0];
+    const { id, email, first_name: firstName, last_name: lastName, role, creation_date: creationDate } = result.rows[0];
 
     // Create response payload
     const response: IUserResponse = {
