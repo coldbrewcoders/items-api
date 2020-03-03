@@ -1,60 +1,60 @@
 import Knex from "knex";
 
-// TODO: Use knex API instead of raw SQL
-// E.g. https://gist.github.com/privateOmega/18bff0b56e70d4260f8c0d0897134ca8;
+// Schema names
+const userServiceSchema: string = "user_service";
+const itemsServiceSchema: string = "items_service";
 
-const up = async (knex: Knex): Promise<any> => {
-  // Create UserService schema
-  await knex.raw("CREATE SCHEMA IF NOT EXISTS UserService;");
+export const up = async (knex: Knex): Promise<void> => {
+
+  // Create User Service schema
+  await knex.raw(`CREATE SCHEMA IF NOT EXISTS ${userServiceSchema};`);
 
   // Create UserRole type
   await knex.raw(`
-    CREATE TYPE UserService.UserRoles AS ENUM (
+    CREATE TYPE ${userServiceSchema}.user_roles AS ENUM (
       'BASIC', 'ADMIN'
     );
   `);
 
   // Create Users table
   await knex.raw(`
-    CREATE TABLE UserService.Users (
-      Id SERIAL PRIMARY KEY,
-      Email VARCHAR(100) NOT NULL UNIQUE,
-      Password VARCHAR(100) NOT NULL,
-      FirstName VARCHAR(100) NOT NULL,
-      LastName VARCHAR(100) NOT NULL,
-      Role UserService.UserRoles NOT NULL DEFAULT 'BASIC',
-      CreationDate TIMESTAMP WITHOUT TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc'),
+    CREATE TABLE ${userServiceSchema}.users (
+      id SERIAL PRIMARY KEY,
+      email VARCHAR(100) NOT NULL UNIQUE,
+      password VARCHAR(100) NOT NULL,
+      first_name VARCHAR(100) NOT NULL,
+      last_name VARCHAR(100) NOT NULL,
+      role ${userServiceSchema}.user_roles NOT NULL DEFAULT 'BASIC',
+      creation_date TIMESTAMP WITHOUT TIME ZONE DEFAULT (NOW() AT TIME ZONE 'utc'),
 
-      CONSTRAINT check_email CHECK(LENGTH(Email) > 0),
-      CONSTRAINT check_password CHECK(LENGTH(Password) > 0),
-      CONSTRAINT check_first_name CHECK(LENGTH(FirstName) > 0),
-      CONSTRAINT check_last_name CHECK(LENGTH(LastName) > 0)
+      CONSTRAINT check_email CHECK(LENGTH(email) > 0),
+      CONSTRAINT check_password CHECK(LENGTH(password) > 0),
+      CONSTRAINT check_first_name CHECK(LENGTH(first_name) > 0),
+      CONSTRAINT check_last_name CHECK(LENGTH(last_name) > 0)
     );`
   );
 
   // Create ItemsService schema
-  await knex.raw("CREATE SCHEMA IF NOT EXISTS ItemsService;");
+  await knex.raw(`CREATE SCHEMA IF NOT EXISTS ${itemsServiceSchema};`);
 
   // Create Items table
   await knex.raw(`
-    CREATE TABLE ItemsService.Items (
-      Id SERIAL PRIMARY KEY,
-      Name VARCHAR(100) NOT NULL UNIQUE,
-      Description VARCHAR NOT NULL,
-      CreatedByUserId INT NOT NULL REFERENCES UserService.Users(Id) ON DELETE CASCADE,
-      LastModifiedByUserId INT REFERENCES UserService.Users(Id) ON DELETE SET NULL,
+    CREATE TABLE ${itemsServiceSchema}.items (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(100) NOT NULL UNIQUE,
+      description VARCHAR NOT NULL,
+      created_by_user_id INT NOT NULL REFERENCES ${userServiceSchema}.users(id) ON DELETE CASCADE,
+      last_modified_by_user_id INT REFERENCES ${userServiceSchema}.users(id) ON DELETE SET NULL,
 
-      CONSTRAINT check_name CHECK(LENGTH(Name) > 0),
-      CONSTRAINT check_description CHECK(LENGTH(Description) > 0)
+      CONSTRAINT check_name CHECK(LENGTH(name) > 0),
+      CONSTRAINT check_description CHECK(LENGTH(description) > 0)
     );`
   );
 }
 
 
-const down = async (knex: Knex): Promise<any> => {
+export const down = async (knex: Knex): Promise<void> => {
   // Cascade delete the user and item service schemas
-  await knex.raw(`DROP SCHEMA UserService CASCADE;`);
-  await knex.raw(`DROP SCHEMA ItemsService CASCADE;`)
+  await knex.raw(`DROP SCHEMA ${userServiceSchema} CASCADE;`);
+  await knex.raw(`DROP SCHEMA ${itemsServiceSchema} CASCADE;`)
 }
-
-export { up, down };

@@ -12,7 +12,7 @@ const addUser = async (email: string, safePasswordHash: string, firstName: strin
   try {
     // Create new user entry
     return await postgresClient.query(
-      "INSERT INTO UserService.Users (Email, Password, FirstName, LastName, Role) VALUES ($1, $2, $3, $4, $5);",
+      "INSERT INTO user_service.users (email, password, first_name, last_name, role) VALUES ($1, $2, $3, $4, $5);",
       [email, safePasswordHash, firstName, lastName, role]
     );
   }
@@ -29,7 +29,7 @@ const addUser = async (email: string, safePasswordHash: string, firstName: strin
 const getUserByEmail = async (email: string): Promise<QueryResult<any>> => {
   try {
     // Get user by email address
-    return await postgresClient.query("SELECT * FROM UserService.Users WHERE Email = $1;", [email]);
+    return await postgresClient.query("SELECT * FROM user_service.users WHERE email = $1;", [email]);
   }
   catch (error) {
     throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -40,7 +40,7 @@ const getUserById = async (userId: string): Promise<QueryResult<any>> => {
   try {
     // Get user by user id
     return await postgresClient.query(
-      "SELECT Id, Email, FirstName, LastName, Role, CreationDate FROM UserService.Users WHERE Id = $1;",
+      "SELECT id, email, first_name, last_name, role, creation_date FROM user_service.users WHERE id = $1;",
       [userId]
     );
   }
@@ -52,7 +52,7 @@ const getUserById = async (userId: string): Promise<QueryResult<any>> => {
 const modifyUserById = async (userId: string, email: string, firstName: string, lastName: string): Promise<QueryResult<any>> => {
   try {
     return await postgresClient.query(
-      "UPDATE UserService.Users SET Email = $1, FirstName = $2, LastName = $3 WHERE Id = $4 RETURNING *;",
+      "UPDATE user_service.users SET email = $1, first_name = $2, last_name = $3 WHERE id = $4 RETURNING *;",
       [email, firstName, lastName, userId]
     );
   }
@@ -68,7 +68,7 @@ const modifyUserById = async (userId: string, email: string, firstName: string, 
 
 const deleteUserById = async (userId: string): Promise<QueryResult<any>> => {
   try {
-    return await postgresClient.query("DELETE FROM UserService.Users WHERE Id = $1 RETURNING *;", [userId]);
+    return await postgresClient.query("DELETE FROM user_service.users WHERE id = $1 RETURNING *;", [userId]);
   }
   catch (error) {
     throw new ApiError("An internal server error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);

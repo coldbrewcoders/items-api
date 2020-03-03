@@ -1,12 +1,14 @@
 {
   "name": "items-api",
   "version": "1.0.0",
+  "license": "ISC",
   "scripts": {
     "prebuild": "del dist/ && cpy '**/*.key' ../dist --cwd=services/ --no-overwrite --parents && cpy '**/*.hbs' ../dist --cwd=services/ --no-overwrite --parents",
     "build": "tsc",
     "watch": "npm run prebuild && tsc -w",
     "session-service": "nodemon ./dist/session-service/main.js",
     "items-service": "nodemon ./dist/items-service/main.js",
+    "items-gql-service": "nodemon ./dist/items-qgl-service/main.js",
     "user-service": "nodemon ./dist/user-service/main.js",
     "notification-service": "nodemon ./dist/notification-service/main.js"
   },
@@ -15,6 +17,7 @@
   },
   "dependencies": {
     "@grpc/proto-loader": "0.5.3",
+    "@types/graphql": "^14.5.0",
     "amqplib": "0.5.5",
     "bcrypt": "3.0.8",
     "bluebird": "3.7.2",
@@ -22,9 +25,11 @@
     "compression": "1.7.4",
     "dotenv": "8.2.0",
     "express": "4.17.1",
+    "express-graphql": "0.9.0",
     "express-validator": "6.4.0",
     "faker": "4.1.0",
     "google-protobuf": "3.11.4",
+    "graphql": "14.6.0",
     "grpc": "1.24.2",
     "grpc-promise": "1.4.0",
     "handlebars": "4.7.3",
@@ -53,7 +58,7 @@
     "@types/jsonwebtoken": "8.3.7",
     "@types/mailgun-js": "0.22.4",
     "@types/morgan": "1.7.37",
-    "@types/node": "13.7.2",
+    "@types/node": "^13.7.2",
     "@types/nodemailer": "6.4.0",
     "@types/pg": "7.14.1",
     "@types/redis": "2.8.16",
@@ -67,6 +72,5 @@
     "eslint-plugin-babel": "5.3.0",
     "eslint-plugin-import": "2.20.1",
     "nodemon": "2.0.2"
-  },
-  "license": "ISC"
+  }
 }
