@@ -4,13 +4,13 @@ require("ts-node/register");
 /* Knex Notes *
  *
  * Migrations:
- * 1. To make a new migration -> knex -x ts migrate:make <seed-file-name> --env development
+ * 1. To make a new migration -> `knex -x ts migrate:make <seed-file-name> --env development`
  *
  * Seeding:
  * 1. To make a new seed file -> `knex -x ts seed:make <seed-file-name> --env development`
  * 2. To run the seed files:
- *   a. knex seed:run
- *   b. knex seed:run --specific=1.1-add_users.ts
+ *   a. `knex seed:run`
+ *   b. `knex seed:run --specific=1.1-add_users.ts`
  *
 */
 
