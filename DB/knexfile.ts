@@ -10,7 +10,7 @@ require("ts-node/register");
  * 1. To make a new seed file -> `knex -x ts seed:make <seed-file-name> --env development`
  * 2. To run the seed files:
  *   a. `knex seed:run`
- *   b. `knex seed:run --specific=1.1-add_users.ts`
+ *   b. `knex seed:run --specific=add_users.ts`
  *
 */
 
