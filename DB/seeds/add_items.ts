@@ -4,6 +4,7 @@ import faker from "faker";
 // Types & helpers
 import { IUser, createUser } from "./add_users";
 
+
 export interface IItem {
   id?: number;
   name: string;
@@ -27,8 +28,8 @@ export const seed = async (knex: Knex): Promise<void> => {
 
   for (let i = 0; i < fakeItemsCount; i++) {
     fakeItems.push({
-      name: `${faker.commerce.productName()} v${i}`, // Add version suffix for uniqueness (constraint)
-      description: faker.commerce.product(),
+      name: `${faker.commerce.product()} v${i}`, // Add version suffix for uniqueness (constraint)
+      description: faker.commerce.productName(),
       created_by_user_id: userId,
       last_modified_by_user_id: userId
     });
