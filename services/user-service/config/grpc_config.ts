@@ -28,7 +28,9 @@ const loadedUserGrpcPackage = grpc.loadPackageDefinition(userPackageDefinition).
 // Start gRPC server
 const server: Server = new Server();
 
-server.addService(loadedUserGrpcPackage.UserService.user, { getUserById });
+// Configure user service grpc methods
+// @ts-ignore
+server.addService(loadedUserGrpcPackage.UserService.service, { getUserById });
 
 // Bind gRPC server to url
 server.bind(process.env.USER_SERVICE_GRPC_BIND_URL, grpc.ServerCredentials.createInsecure());
@@ -36,7 +38,7 @@ server.bind(process.env.USER_SERVICE_GRPC_BIND_URL, grpc.ServerCredentials.creat
 // Start gRPC server
 server.start();
 
-logger.info(`gRPC server listening on: ${process.env.SESSION_SERVICE_GRPC_BIND_URL}.`);
+logger.info(`gRPC server listening on: ${process.env.USER_SERVICE_GRPC_BIND_URL}.`);
 
 
 /** Get gRPC client for session service **/

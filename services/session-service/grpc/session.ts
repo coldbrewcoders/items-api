@@ -3,7 +3,6 @@ import { signJwt, verifyJwt } from "../repository/jwt";
 import { getSessionToken, setSessionToken, removeSessionToken } from "../repository/session_manager";
 
 
-// TODO: What is the `call` type
 const validateSession = async (call: any, callback: Function): Promise<void> => {
   const sessionToken: string = call.request?.sessionToken;
 
@@ -12,7 +11,7 @@ const validateSession = async (call: any, callback: Function): Promise<void> => 
 
   if (!sessionValues) {
     // If token is invalid, no session values are recieved
-    callback("Invalid token", { userId: null, email: null, firstName: null, lastName: null, role: null });
+    callback("Invalid token", null);
   }
   else {
     // Get user id from session values
@@ -23,14 +22,14 @@ const validateSession = async (call: any, callback: Function): Promise<void> => 
 
     if (!cacheSessionToken) {
       // If no token found for user in redis, session has expired
-      callback("Token has expired or has been removed", { userId: null, email: null, firstName: null, lastName: null, role: null });
+      callback("Token has expired or has been removed", null);
     }
     else if (cacheSessionToken !== sessionToken) {
       // If redis token does not match passed token, remove it from redis
       await removeSessionToken(userId);
 
       // Return with an error and no session values
-      callback("Tokens do not match for user", { userId: null, email: null, firstName: null, lastName: null, role: null });
+      callback("Tokens do not match for user", null);
     }
     else {
       // Re-add token to redis to reset expiration time
@@ -42,7 +41,6 @@ const validateSession = async (call: any, callback: Function): Promise<void> => 
   }
 }
 
-// TODO: What is the `call` type
 const createSession = async (call: any, callback: Function): Promise<void> => {
   const { userId, email, firstName, lastName, role } = call.request;
 
@@ -52,14 +50,14 @@ const createSession = async (call: any, callback: Function): Promise<void> => {
   // Check if token creation was successful
   if (!sessionToken) {
     // Failed to create toke, return error
-    callback("Error creating JWT", { sessionToken: "" });
+    callback("Error creating JWT", null);
   }
   else {
     // Add session token to redis
     const result: string = await setSessionToken(userId, sessionToken);
 
     if (!result) {
-      callback("Error adding session to Redis", { sessionToken: "" });
+      callback("Error adding session to Redis", null);
     }
     else {
       // Return new JWT
@@ -75,7 +73,7 @@ const replaceSession = async (call: any, callback: Function): Promise<void> => {
   const result: number = await removeSessionToken(userId);
 
   if (!(result === 0 || result === 1)) {
-    callback("Error removing session token from Redis", { sessionToken: "" });
+    callback("Error removing session token from Redis", null);
   }
   else {
     // Create new session token with updated session values
@@ -84,14 +82,14 @@ const replaceSession = async (call: any, callback: Function): Promise<void> => {
     // Check if token creation was successful
     if (!sessionToken) {
       // Failed to create toke, return error
-      callback("Error creating JWT", { sessionToken: "" });
+      callback("Error creating JWT", null);
     }
     else {
       // Add new session token to redis
       const result = await setSessionToken(userId, sessionToken);
 
       if (!result) {
-        callback("Error adding session to Redis", { sessionToken: "" });
+        callback("Error adding session to Redis", null);
       }
       else {
         // Return new JWT
@@ -115,7 +113,6 @@ const removeSession = async (call: any, callback: Function): Promise<void> => {
     callback("Error removing session token from Redis", { isRemoved: false });
   }
 }
-
 
 export {
   validateSession,

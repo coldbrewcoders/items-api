@@ -4,6 +4,8 @@ import HttpStatus from "http-status-codes";
 
 // Config
 import { sendNotificationToQueue } from "../config/rabbitmq_config";
+import { userServiceGrpcClient } from "../config/grpc_config";
+import logger from "../config/logger_config";
 
 // Middleware
 import { isAuthenticated, isAuthenticatedAdmin } from "../middleware/authorization";
@@ -219,9 +221,28 @@ router.put("/:itemId", [
     if (userId !== createdByUserId) {
       // User modified an item created by a different user, send owner of item an email
 
-      // TODO: Make gRPC call to user-service to get email address for user
+      try {
+        // Make gRPC call to user-service to get email address for user
+        const userInfo = await userServiceGrpcClient.getUserById().sendMessage({ userId: createdByUserId });
 
-      // TODO: Send email to this user to notify them that their item has been modified
+        // Get email and firstName from user info
+        const { email, firstName } = userInfo;
+
+        // Create the content of the email notification
+        const emailNotification: IEmailNotification = {
+          email,
+          firstName,
+          subject: "Another user has modified your item!",
+          messageHeader: `Your item has been modified, now named ${name}`,
+          messageBody: `The description for ${name} is: ${description}.`
+        };
+
+        // Send email to this user to notify them that their item has been modified
+        await sendNotificationToQueue(emailNotification);
+      }
+      catch (error) {
+        logger.error(error);
+      }
     }
 
     res.json(result.rows[0]);
@@ -272,13 +293,34 @@ router.delete("/:itemId", [
     await sendNotificationToQueue(emailNotification);
 
     // Get user id of who the item was created by
-    // const { createdbyuserId: createdByUserId } = result.rows[0];
+    const { created_by_user_id: createdByUserId } = result.rows[0];
 
-    // if (userId !== createdByUserId) {
+    if (userId !== createdByUserId) {
       // User deleted an item created by a different user, send owner of item an email
-      // TODO: Make gRPC call to user-service to get email address for user
-      // TODO: Send email to this user to notify them that their item has been modified
-    // }
+
+      try {
+        // Make gRPC call to user-service to get email address for user
+        const userInfo = await userServiceGrpcClient.getUserById().sendMessage({ userId: createdByUserId });
+
+        // Get email and firstName from user info
+        const { email, firstName } = userInfo;
+
+        // Create the content of the email notification
+        const emailNotification: IEmailNotification = {
+          email,
+          firstName,
+          subject: "Another user has deleted your item!",
+          messageHeader: `Your item named ${name} has been deleted by another user`,
+          messageBody: `The description for ${name} was: ${description}.`
+        };
+
+        // Send email to this user to notify them that their item has been modified
+        await sendNotificationToQueue(emailNotification);
+      }
+      catch (error) {
+        logger.error(error);
+      }
+    }
 
     res.sendStatus(200);
   }

@@ -10,7 +10,8 @@
     "items-service": "nodemon ./dist/items-service/main.js",
     "items-gql-service": "nodemon ./dist/items-qgl-service/main.js",
     "user-service": "nodemon ./dist/user-service/main.js",
-    "notification-service": "nodemon ./dist/notification-service/main.js"
+    "notification-service": "nodemon ./dist/notification-service/main.js",
+    "all-services": "npm run session-service & npm run items-service & npm run user-service & npm run notification-service"
   },
   "nodemonConfig": {
     "delay": "2500"

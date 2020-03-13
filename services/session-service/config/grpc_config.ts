@@ -15,10 +15,10 @@ import { validateSession, createSession, replaceSession, removeSession } from ".
 
 
 // Get path to proto file
-const PROTO_PATH: string = path.join(__dirname, "../../../protos/session.proto");
+const SESSION_PROTO_PATH: string = path.join(__dirname, "../../../protos/session.proto");
 
 // Load proto file
-const sessionPackageDefinition: PackageDefinition = loadSync(PROTO_PATH, { keepCase: true });
+const sessionPackageDefinition: PackageDefinition = loadSync(SESSION_PROTO_PATH, { keepCase: true });
 
 // Get proto package definition
 // @ts-ignore gRPC proto file is dynamically imported, definition is not generated till runtime

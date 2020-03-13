@@ -18,7 +18,7 @@ const verifySessionToken = async (req: Request, _res: Response, next: NextFuncti
 
     if (!authHeader) {
       // Unauthorized if Authentication header is missing from request
-      throw new ApiError("Authentication header is not present", HttpStatus.UNAUTHORIZED);
+      next(new ApiError("Authentication header is not present", HttpStatus.UNAUTHORIZED));
     }
 
     // Parse session token from Authorization header
@@ -26,7 +26,7 @@ const verifySessionToken = async (req: Request, _res: Response, next: NextFuncti
 
     if (!sessionToken) {
       // Unauthorized if session token is missing from request
-      throw new ApiError("Session token is missing from Authentication header", HttpStatus.UNAUTHORIZED);
+      next(new ApiError("Session token is missing from Authentication header", HttpStatus.UNAUTHORIZED));
     }
 
     // Make gRPC call to session service to validate session token
