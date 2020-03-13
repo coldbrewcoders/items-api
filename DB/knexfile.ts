@@ -1,10 +1,18 @@
-// Necessary import for typescript knexfiles
-require("ts-node/register");
+import { resolve } from "path";
+import { config } from "dotenv";
+
+config({ path: resolve(__dirname, "../.env") });
+
 
 /* Knex Notes *
  *
  * Migrations:
  * 1. To make a new migration -> `knex -x ts migrate:make <seed-file-name> --env development`
+ * 2. Running Migrations:
+ *   a. `knex --knexfile [path] --env [environment to run on (default: process.env.NODE_ENV || 'development')] migrate:latest` --> Runs all migrations not yet run
+ *   b. `... migrate:up`  --> Runs the next migration that has not yet been ran (or a specific migration)
+ *   c. `... migrate:down`  --> Undo the last migration ran (or undo a specific migration)
+ *   d. `... migrate:rollback`  --> Undo the last batch of migrations that has been ran
  *
  * Seeding:
  * 1. To make a new seed file -> `knex -x ts seed:make <seed-file-name> --env development`
@@ -17,15 +25,14 @@ require("ts-node/register");
 module.exports = {
   development: {
     client: "pg",
-    // TODO: Figure out why env variables are undef even when requiring in dotenv and config()'ing
-    connection: "postgresql://malcolmnavarro@localhost/node_microservice_db",
+    connection: process.env.DATABASE_URL,
     migrations: {
       tableName: "knex_migrations",
-      directory: __dirname + "/migrations",
+      directory: resolve(__dirname, "./migrations"),
       extensions: "ts"
     },
     seeds: {
-      directory: __dirname + "/seeds",
+      directory: resolve(__dirname, "./seeds"),
       extension: "ts"
     }
   }
