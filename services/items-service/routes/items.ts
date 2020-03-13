@@ -214,13 +214,15 @@ router.put("/:itemId", [
     await sendNotificationToQueue(emailNotification);
 
     // Get user id of who the item was created by
-    // const { created_by_user_id: createdByUserId } = result.rows[0];
+    const { created_by_user_id: createdByUserId } = result.rows[0];
 
-    // if (userId !== createdByUserId) {
+    if (userId !== createdByUserId) {
       // User modified an item created by a different user, send owner of item an email
+
       // TODO: Make gRPC call to user-service to get email address for user
+
       // TODO: Send email to this user to notify them that their item has been modified
-    // }
+    }
 
     res.json(result.rows[0]);
   }

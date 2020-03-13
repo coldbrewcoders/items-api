@@ -37,4 +37,4 @@ server.bind(process.env.SESSION_SERVICE_GRPC_BIND_URL, grpc.ServerCredentials.cr
 // Start gRPC server
 server.start();
 
-logger.info(`Session gRPC server listening on port: ${process.env.SESSION_SERVICE_GRPC_BIND_URL}.`);
+logger.info(`gRPC server listening on: ${process.env.SESSION_SERVICE_GRPC_BIND_URL}.`);

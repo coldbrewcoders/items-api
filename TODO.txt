@@ -1,5 +1,11 @@
 
 To Do:
+[] Finish user service gRPC server implementation
+[] Add necessary notifications send from item service
+[] Create load testing/benchmarking scripts
+[] Add flag to turn off sending emails during benchmarking (to prevent costing money)
+[] Create a run script to run all services as detached processes at once
+[] Add NGINX to reverse proxy requests
 
 [] Add https://github.com/inxilpro/node-app-root-path to make imports cleaner and easier to manage
 [] Investigate wether https://www.npmjs.com/package/lusca is worth using or not. It's in the TS boilerplate repository
