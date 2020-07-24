@@ -15,10 +15,10 @@ import { validateSession, createSession, replaceSession, removeSession } from ".
 
 
 // Get path to proto file
-const PROTO_PATH: string = path.join(__dirname, "../../../protos/session.proto");
+const SESSION_PROTO_PATH: string = path.join(__dirname, "../../../protos/session.proto");
 
 // Load proto file
-const sessionPackageDefinition: PackageDefinition = loadSync(PROTO_PATH, { keepCase: true });
+const sessionPackageDefinition: PackageDefinition = loadSync(SESSION_PROTO_PATH, { keepCase: true });
 
 // Get proto package definition
 // @ts-ignore gRPC proto file is dynamically imported, definition is not generated till runtime
@@ -37,4 +37,4 @@ server.bind(process.env.SESSION_SERVICE_GRPC_BIND_URL, grpc.ServerCredentials.cr
 // Start gRPC server
 server.start();
 
-logger.info(`Session gRPC server listening on port: ${process.env.SESSION_SERVICE_GRPC_BIND_URL}.`);
+logger.info(`gRPC server listening on: ${process.env.SESSION_SERVICE_GRPC_BIND_URL}.`);
