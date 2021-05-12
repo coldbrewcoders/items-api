@@ -30,7 +30,7 @@
     "faker": "4.1.0",
     "google-protobuf": "3.11.4",
     "graphql": "14.6.0",
-    "grpc": "1.24.2",
+    "grpc": "1.24.9",
     "grpc-promise": "1.4.0",
     "handlebars": "4.7.3",
     "http-status-codes": "1.4.0",
